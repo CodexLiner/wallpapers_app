@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home_bottom"
-        android:icon="@drawable/fi_rr_info" />
+        android:icon="@drawable/fi_ss_home" />
     <item
         android:id="@+id/fr"
-        android:icon="@drawable/fi_rr_makeup_brush" />
+        android:icon="@drawable/fi_ss_apps" />
     <item
         android:id="@+id/home_bottom"
-        android:icon="@drawable/fi_br_download" />
+        android:icon="@drawable/fi_ss_heart" />
     <item
         android:id="@+id/settings_bottom"
-        android:icon="@drawable/fi_br_download" />
+        android:icon="@drawable/fi_ss_poker_chip" />
 </menu>
