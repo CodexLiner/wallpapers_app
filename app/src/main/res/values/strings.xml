@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Dezky</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recently_added">Recently Added</string>
+</resources>
