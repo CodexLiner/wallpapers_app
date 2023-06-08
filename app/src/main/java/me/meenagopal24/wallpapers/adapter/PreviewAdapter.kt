@@ -1,18 +1,16 @@
 package me.meenagopal24.wallpapers.adapter
 
-import android.net.Uri
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.jsibbold.zoomage.ZoomageView
 import me.meenagopal24.wallpapers.R
 
-class Preview_adapter(private val list: List<String>)  : RecyclerView.Adapter<Preview_adapter.holder>() {
+class PreviewAdapter(private val list: List<String>)  : RecyclerView.Adapter<PreviewAdapter.holder>() {
     class holder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val wallpaper :ImageView  = itemView.findViewById(R.id.wallpaper_container)
+        val wallpaper : ZoomageView  = itemView.findViewById(R.id.wallpaper_container)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): holder {

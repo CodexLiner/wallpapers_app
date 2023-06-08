@@ -9,22 +9,25 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import me.meenagopal24.wallpapers.MainActivity
 import me.meenagopal24.wallpapers.R
-import me.meenagopal24.wallpapers.adapter.Preview_adapter
+import me.meenagopal24.wallpapers.adapter.PreviewAdapter
+import me.meenagopal24.wallpapers.utils.Functions
 import me.meenagopal24.wallpapers.utils.wallpaper
 
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class PreviewFragment(private val preList: List<String>, private val openPosition : Int = -1) : Fragment() {
-    // TODO: Rename and change types of parameters
+class PreviewFragment(private val preList: List<String>, private val openPosition: Int = -1) :
+    Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var position: Int = 0;
 //    lateinit var list: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activity?.setTheme(R.style.Theme_TranslucentWindow)
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -36,25 +39,24 @@ class PreviewFragment(private val preList: List<String>, private val openPositio
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        context?.theme?.applyStyle(R.style.TranslucentWindow, true);
+        Functions.windowTrans(requireActivity(), true)
+        (requireActivity() as MainActivity).bottomModify(false)
         val view: View = inflater.inflate(R.layout.fragment_preview, container, false)
+
         val wallpapers: RecyclerView = view.findViewById(R.id.recycler_wallaper)
         wallpapers.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//todo:for testing default list
-//        prelist = arrayListOf()
-//        list.add("https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg")
-//        list.add("https://images.pexels.com/photos/937980/pexels-photo-937980.jpeg")
-        lateinit var adapter: Preview_adapter
+
+        lateinit var adapter: PreviewAdapter
         if (preList.isNotEmpty()) {
-            adapter = Preview_adapter(preList)
+            adapter = PreviewAdapter(preList)
             position = openPosition
         }
         val snapHelper = PagerSnapHelper()
 
         snapHelper.attachToRecyclerView(wallpapers)
         wallpapers.adapter = adapter
-        if (openPosition != -1){
+        if (openPosition != -1) {
             wallpapers.scrollToPosition(openPosition)
         }
         val onScrollListener: RecyclerView.OnScrollListener =

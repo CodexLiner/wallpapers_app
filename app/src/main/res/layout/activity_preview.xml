@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     tools:context=".UI.PreviewFragment">
-        <androidx.recyclerview.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:scrollbars="none"
         android:scrollIndicators="top"
         android:overScrollMode="never"

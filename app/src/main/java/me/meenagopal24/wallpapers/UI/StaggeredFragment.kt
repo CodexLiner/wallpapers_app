@@ -12,6 +12,7 @@ import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.ScalingItemDecoration
 import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.interfaces.PreviewInterface
+import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -55,7 +56,7 @@ class StaggeredFragment : Fragment(), PreviewInterface {
     }
 
     override fun changeFragment(position: Int) {
-        requireActivity().supportFragmentManager.beginTransaction().addToBackStack("old")
+        requireActivity().supportFragmentManager.beginTransaction().addToBackStack(PREVIEW_FRAGMENT)
             .add(R.id.main_layout, PreviewFragment(list, position)).commit()
     }
 
