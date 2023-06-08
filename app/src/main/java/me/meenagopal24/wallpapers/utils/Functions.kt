@@ -2,7 +2,6 @@ package me.meenagopal24.wallpapers.utils
 
 import android.app.Activity
 import android.content.Context
-import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
@@ -44,10 +43,9 @@ class Functions(private val m: FragmentManager) {
 //                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             }
         }
-        fun getDp(dpValue: Int , context : Context) : Int{
+        fun getDp(dpValue: Int, context: Context): Int {
             val density = context.resources.displayMetrics.density
-            val heightInPixels = (dpValue * density + 0.5f).toInt()
-            return heightInPixels
+            return (dpValue * density + 0.5f).toInt()
         }
     }
 }

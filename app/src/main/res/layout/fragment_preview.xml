@@ -6,14 +6,15 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     tools:context=".UI.PreviewFragment">
-        <androidx.recyclerview.widget.RecyclerView
-        android:scrollbars="none"
-        android:scrollIndicators="top"
-        android:overScrollMode="never"
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_wallaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:scrollIndicators="top"
+        android:scrollbars="none"
         tools:listitem="@layout/wallpaper_single" />
 
     <TextView
@@ -22,8 +23,8 @@
         android:layout_gravity="top"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="sddsdd"
+        android:fontFamily="@font/open_sans_semibold"
+        android:text="WallPaper Details"
         android:textColor="@color/white"
         android:textSize="17sp"
         android:textStyle="bold" />
@@ -62,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:fontFamily="@font/roboto"
                 android:gravity="center"
                 android:text="Info"
                 android:textColor="@color/white" />
@@ -91,8 +93,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:fontFamily="@font/roboto"
                 android:gravity="center"
                 android:text="Download"
+
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -109,10 +113,10 @@
 
             <ImageView
                 android:id="@+id/apply_wallpaper"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/appy_bg"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="20dp"
                 android:src="@drawable/fi_rr_makeup_brush"
                 app:tint="@color/white" />
@@ -121,6 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:fontFamily="@font/roboto"
                 android:gravity="center"
                 android:text="Apply"
                 android:textColor="@color/white" />

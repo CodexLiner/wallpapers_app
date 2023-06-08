@@ -13,7 +13,7 @@ import me.meenagopal24.wallpapers.MainActivity
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.PreviewAdapter
 import me.meenagopal24.wallpapers.utils.Functions
-import me.meenagopal24.wallpapers.utils.wallpaper
+import me.meenagopal24.wallpapers.utils.Wallpaper
 
 
 private const val ARG_PARAM1 = "param1"
@@ -73,7 +73,7 @@ class PreviewFragment(private val preList: List<String>, private val openPositio
             showDlg()
         }
         view.findViewById<ImageView>(R.id.download_wallpaper).setOnClickListener {
-            wallpaper(
+            Wallpaper(
                 context = requireContext(),
                 uri = preList[position],
                 flag = 0
@@ -112,7 +112,7 @@ class PreviewFragment(private val preList: List<String>, private val openPositio
     }
 
     private fun setFlag(f: Int) {
-        wallpaper(
+        Wallpaper(
             context = requireContext(),
             uri = preList[position],
             flag = f

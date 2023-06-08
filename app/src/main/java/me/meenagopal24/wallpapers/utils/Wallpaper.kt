@@ -3,35 +3,31 @@ package me.meenagopal24.wallpapers.utils
 import android.Manifest
 import android.app.Activity
 import android.app.WallpaperManager
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.snackbar.Snackbar
 import me.meenagopal24.wallpapers.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 
-public class wallpaper(private val uri: String, val context: Context, val flag: Int) {
+public class Wallpaper(private val uri: String, val context: Context, val flag: Int) {
     val wallpaperManager: WallpaperManager = WallpaperManager.getInstance(context)
+    val name: FrameLayout = (context as Activity).findViewById<FrameLayout>(R.id.main_layout)
     fun getWallpaperReady() {
         try {
             val icon = BitmapFactory.decodeResource(context.resources, R.drawable.androidw)
@@ -74,16 +70,11 @@ public class wallpaper(private val uri: String, val context: Context, val flag: 
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {
-                        Toast.makeText(
-                            context,
-                            "Failed to Wallpaper set successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+                        Snackbar.make(name, "Failed to Apply Wallpaper", Snackbar.LENGTH_SHORT)
+                            .show()
                     }
                 })
-
-            Toast.makeText(context, "Wallpaper set successfully", Toast.LENGTH_SHORT).show()
+            Snackbar.make(name, "Wallpaper Applied successfully", Snackbar.LENGTH_SHORT).show()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -105,7 +96,7 @@ public class wallpaper(private val uri: String, val context: Context, val flag: 
             )
             return
         }
-        Toast.makeText(context, "Downloading", Toast.LENGTH_SHORT).show()
+        Snackbar.make(name, "Downloading...", Snackbar.LENGTH_SHORT).show()
         Glide.with(context)
             .asBitmap()
             .load(uri)
@@ -114,23 +105,25 @@ public class wallpaper(private val uri: String, val context: Context, val flag: 
                     resource: Bitmap,
                     transition: Transition<in Bitmap?>?
                 ) {
-                    val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    val picturesDir =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                     if (picturesDir != null) {
                         val imageFile = File(picturesDir, fileName)
                         try {
                             FileOutputStream(imageFile).use { fos ->
                                 resource.compress(Bitmap.CompressFormat.JPEG, 10, fos)
-                                Toast.makeText(context, "Download Complete", Toast.LENGTH_SHORT).show()
+                                Snackbar.make(name, "Downloading Complete", Snackbar.LENGTH_SHORT)
+                                    .show()
                             }
                             val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                             mediaScanIntent.data = Uri.fromFile(imageFile)
                             context.sendBroadcast(mediaScanIntent)
                         } catch (e: IOException) {
-                            Log.d("TAG", "onResourceReady: $e")
                             e.printStackTrace()
                         }
                     }
                 }
+
                 override fun onLoadCleared(placeholder: Drawable?) {
                     // Handle the placeholder if needed
                 }
