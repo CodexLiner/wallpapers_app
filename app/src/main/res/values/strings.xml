@@ -2,4 +2,7 @@
     <string name="app_name">Dezky</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="recently_added">Recently Added</string>
+    <string name="categories">Categories</string>
+    <string name="settings_amp_more"><![CDATA[Settings & More]]></string>
+    <string name="favourite">Favourite</string>
 </resources>

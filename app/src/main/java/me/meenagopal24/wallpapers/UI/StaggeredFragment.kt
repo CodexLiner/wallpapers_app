@@ -9,15 +9,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.meenagopal24.wallpapers.R
-import me.meenagopal24.wallpapers.ScalingItemDecoration
-import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
-import me.meenagopal24.wallpapers.interfaces.PreviewInterface
+import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class StaggeredFragment : Fragment(), PreviewInterface {
+class StaggeredFragment : Fragment(),
+    ChangeInterface {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -50,14 +49,18 @@ class StaggeredFragment : Fragment(), PreviewInterface {
         list.add("https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg")
         list.add("https://images.pexels.com/photos/937980/pexels-photo-937980.jpeg")
 
-        staggred.adapter = StaggeredAdapter(list, this)
+//        staggred.adapter = StaggeredAdapter(list, this)
 //        staggered.addItemDecoration(SpacesItemDecoration(16))
         return view
     }
 
     override fun changeFragment(position: Int) {
         requireActivity().supportFragmentManager.beginTransaction().addToBackStack(PREVIEW_FRAGMENT)
-            .add(R.id.main_layout, PreviewFragment(list, position)).commit()
+//            .add(R.id.main_layout, PreviewFragment(list, position)).commit()
+    }
+
+    override fun changeFragment(title: String?, category: String?) {
+
     }
 
 

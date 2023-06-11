@@ -1,85 +1,116 @@
 package me.meenagopal24.wallpapers.UI
 
+import android.app.Activity
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
-import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import me.meenagopal24.wallpapers.MainActivity
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.PreviewAdapter
+import me.meenagopal24.wallpapers.interfaces.WallpaperResponse
+import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.utils.Constants
 import me.meenagopal24.wallpapers.utils.Functions
-import me.meenagopal24.wallpapers.utils.Wallpaper
+import me.meenagopal24.wallpapers.utils.MyWallpaperManager
+import me.meenagopal24.wallpapers.utils.WallpaperListHelper
 
 
 private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+public const val PRE_LIST = "PreList"
+public const val OPEN_POSITION = "openPosition"
 
-class PreviewFragment(private val preList: List<String>, private val openPosition: Int = -1) :
-    Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+class PreviewFragment() :
+    Fragment(), WallpaperResponse {
+    lateinit var preList: ArrayList<wallpapers.item>
+    private var openPosition: Int = -1
     private var position: Int = 0;
-//    lateinit var list: ArrayList<String>
+    lateinit var wallpapers: RecyclerView
+    private lateinit var progressDialog: Dialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activity?.setTheme(R.style.Theme_TranslucentWindow)
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            openPosition = it.getInt(OPEN_POSITION)
+            preList = it.getParcelableArrayList(PRE_LIST)!!
+            WallpaperListHelper(requireContext()).saveList(preList, openPosition)
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
-        // Inflate the layout for this fragment
         Functions.windowTrans(requireActivity(), true)
         (requireActivity() as MainActivity).bottomModify(false)
-        val view: View = inflater.inflate(R.layout.fragment_preview, container, false)
+        return inflater.inflate(R.layout.fragment_preview, container, false)
+    }
 
-        val wallpapers: RecyclerView = view.findViewById(R.id.recycler_wallaper)
-        wallpapers.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        lateinit var adapter: PreviewAdapter
-        if (preList.isNotEmpty()) {
-            adapter = PreviewAdapter(preList)
-            position = openPosition
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        wallpapers = view.findViewById(R.id.recycler_wallaper)!!
+        if (Constants.recyclerState != null) {
+            wallpapers.layoutManager?.onRestoreInstanceState(Constants.recyclerState)
         }
+        initializeRecyclerView(preList, position)
         val snapHelper = PagerSnapHelper()
-
         snapHelper.attachToRecyclerView(wallpapers)
-        wallpapers.adapter = adapter
-        if (openPosition != -1) {
-            wallpapers.scrollToPosition(openPosition)
-        }
         val onScrollListener: RecyclerView.OnScrollListener =
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager?
-                    position = layoutManager!!.findFirstVisibleItemPosition()
+                    this@PreviewFragment.position = layoutManager!!.findFirstVisibleItemPosition()
                 }
             }
         wallpapers.addOnScrollListener(onScrollListener)
-
-        view.findViewById<ImageView>(R.id.apply_wallpaper).setOnClickListener {
+        view.findViewById<Button>(R.id.apply_wallpaper).setOnClickListener {
             showDlg()
         }
-        view.findViewById<ImageView>(R.id.download_wallpaper).setOnClickListener {
-            Wallpaper(
-                context = requireContext(),
-                uri = preList[position],
-                flag = 0
-            ).saveBitmapToStorage("${System.currentTimeMillis()}.jpg")
+        view.findViewById<Button>(R.id.download_wallpaper).setOnClickListener {
+            preList[position].let { it1 ->
+                MyWallpaperManager(
+                    context = requireContext(),
+                    uri = it1.url,
+                    flag = 0,
+                    close = this
+                ).saveBitmapToStorage("${System.currentTimeMillis()}.jpg")
+            }
         }
-        return view
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Constants.recyclerState = wallpapers.layoutManager?.onSaveInstanceState()
+    }
+
+    private fun initializeRecyclerView(preList: ArrayList<wallpapers.item>, position: Int) {
+        wallpapers.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        lateinit var adapter: PreviewAdapter
+        if (preList.isNotEmpty()) {
+            adapter = PreviewAdapter(preList)
+            this@PreviewFragment.position = position
+        } else {
+            this@PreviewFragment.preList = WallpaperListHelper(requireContext()).getList()
+            adapter = PreviewAdapter(preList)
+        }
+        wallpapers.adapter = adapter
+        if (openPosition != -1) {
+            wallpapers.scrollToPosition(openPosition)
+        }
     }
 
     private fun showDlg() {
@@ -98,6 +129,7 @@ class PreviewFragment(private val preList: List<String>, private val openPositio
         dialog.findViewById<Button>(R.id.home).setOnClickListener {
             setFlag(0)
             dialog.dismiss()
+            initializeRecyclerView(preList, position)
         }
         dialog.findViewById<Button>(R.id.lock).setOnClickListener {
             setFlag(1)
@@ -112,21 +144,43 @@ class PreviewFragment(private val preList: List<String>, private val openPositio
     }
 
     private fun setFlag(f: Int) {
-        Wallpaper(
-            context = requireContext(),
-            uri = preList[position],
-            flag = f
-        ).getWallpaperReady()
+        progressDialog = Dialog(requireContext())
+        progressDialog.setContentView(R.layout.loading)
+        progressDialog.setCancelable(false)
+
+        val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(progressDialog.window?.attributes)
+        layoutParams.width = (context?.resources?.displayMetrics?.widthPixels ?: 0) - 100
+
+        progressDialog.window?.attributes = layoutParams
+        progressDialog.window?.setBackgroundDrawableResource(R.color.transparent)
+        progressDialog.show()
+
+        preList[position].let {
+            MyWallpaperManager(
+                context = requireContext(),
+                uri = it.url,
+                flag = f,
+                close = this
+            ).getWallpaperReady()
+        }
     }
 
-//    companion object {
-//
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) = PreviewFragment().apply {
-//            arguments = Bundle().apply {
-//                putString(ARG_PARAM1, param1)
-//                putString(ARG_PARAM2, param2)
-//            }
-//        }
-//    }
+    companion object {
+        @JvmStatic
+        fun newInstance(preList: ArrayList<wallpapers.item>?, openPosition: Int = -1) =
+            PreviewFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(PRE_LIST, preList)
+                    putInt(OPEN_POSITION, openPosition)
+                }
+            }
+    }
+
+    override fun onWallpaperApplied() {
+        progressDialog.dismiss()
+        if (Build.BRAND.equals("Nothing" , true)) {
+            requireActivity().onBackPressed()
+        }
+    }
 }

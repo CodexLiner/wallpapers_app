@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginTop="10dp"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="20dp"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/spiderman"
+            android:id="@+id/cat_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:paddingStart="15dp"
+            android:id="@+id/cat_title"
+            android:background="@drawable/category_bg"
+            android:backgroundTintMode="screen"
+            android:textSize="25sp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:textColor="@color/white"
+            android:gravity="start|center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="SUPERHEROS"/>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

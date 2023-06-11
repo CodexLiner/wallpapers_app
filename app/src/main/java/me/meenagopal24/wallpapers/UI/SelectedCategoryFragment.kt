@@ -1,12 +1,14 @@
 package me.meenagopal24.wallpapers.UI
 
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,50 +17,65 @@ import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
-import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
-import me.meenagopal24.wallpapers.utils.Functions
+import me.meenagopal24.wallpapers.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-class HomeFragment : Fragment(),
-    ChangeInterface {
-    private var param1: String? = null
-    private var param2: String? = null
+private const val TITLE = "param1"
+private const val CATEGORY = "param2"
+
+@SuppressLint("StaticFieldLeak")
+lateinit var progress: ProgressBar
+
+class SelectedCategoryFragment() : ChangeInterface,
+    Fragment() {
+    // TODO: Rename and change types of parameters
+    private var name: String? = null
+    private var category: String? = null
     lateinit var list: ArrayList<wallpapers.item>
     lateinit var wallpapersRecycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            name = it.getString(TITLE)
+            category = it.getString(CATEGORY)
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
-        Functions.windowTrans(requireActivity(), false)
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_selected_category, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<TextView>(R.id.title_selected).text = name
+        progress = view.findViewById(R.id.progress)
         wallpapersRecycler = view.findViewById(R.id.staggered_recycler)
         wallpapersRecycler.layoutManager =
             GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
-        getWallpapers()
-        return view;
+        getItemsFromCategory()
     }
 
-    private fun getWallpapers() {
-        val call: Call<wallpapers> = RetrofitClient.getInstance().api.wallpaper
+    private fun getItemsFromCategory() {
+        val call: Call<wallpapers> = RetrofitClient.getInstance().api.getWallpaperByCategory(name)
         call.enqueue(object : Callback<wallpapers> {
             override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
+                progress.visibility = View.GONE
                 list = response.body()?.list as ArrayList<wallpapers.item>
                 wallpapersRecycler.adapter =
-                    response.body()?.list?.let { StaggeredAdapter(it, this@HomeFragment) }
+                    response.body()?.list?.let {
+                        StaggeredAdapter(
+                            it,
+                            this@SelectedCategoryFragment
+                        )
+                    }
             }
 
             override fun onFailure(call: Call<wallpapers>, t: Throwable) {
@@ -66,27 +83,28 @@ class HomeFragment : Fragment(),
             }
 
         })
-        CategoryFragment
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 
     override fun changeFragment(position: Int) {
-        requireActivity().supportFragmentManager.beginTransaction().addToBackStack(PREVIEW_FRAGMENT)
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack(Constants.PREVIEW_FRAGMENT)
             .add(R.id.main_layout, PreviewFragment.newInstance(list, openPosition = position))
             .commit()
+
     }
 
     override fun changeFragment(title: String?, category: String?) {
 
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(title: String, category: String) =
+            SelectedCategoryFragment().apply {
+                arguments = Bundle().apply {
+                    putString(TITLE, title)
+                    putString(CATEGORY, category)
+                }
+            }
     }
 }

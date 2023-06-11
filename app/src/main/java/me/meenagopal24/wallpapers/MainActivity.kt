@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import me.meenagopal24.wallpapers.UI.FavouriteFragment
 import me.meenagopal24.wallpapers.UI.HomeFragment
 import me.meenagopal24.wallpapers.utils.Constants.*
 import me.meenagopal24.wallpapers.utils.Functions

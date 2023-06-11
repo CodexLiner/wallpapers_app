@@ -36,10 +36,10 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/home_button_bg"
-            android:fontFamily="@font/open_sans"
+            android:fontFamily="@font/poppins"
             android:text="Home Screen"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -50,10 +50,10 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/lock_button_bg"
-            android:fontFamily="@font/open_sans"
+            android:fontFamily="@font/poppins"
             android:text="Lock Screen"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -67,8 +67,8 @@
             android:background="@drawable/both_button_bg"
             android:text="Home &amp; Lock Screens"
             android:textAllCaps="false"
-            android:fontFamily="@font/open_sans"
-            android:textColor="@color/white"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/black"
             android:textStyle="normal" />
 
     </LinearLayout>
