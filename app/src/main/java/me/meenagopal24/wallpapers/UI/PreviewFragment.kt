@@ -1,29 +1,30 @@
 package me.meenagopal24.wallpapers.UI
 
-import android.app.Activity
 import android.app.Dialog
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.view.View.OnClickListener
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import com.google.android.material.snackbar.Snackbar
 import me.meenagopal24.wallpapers.MainActivity
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.PreviewAdapter
+import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
+import me.meenagopal24.wallpapers.databases.favourite
 import me.meenagopal24.wallpapers.interfaces.WallpaperResponse
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.utils.Constants
+import me.meenagopal24.wallpapers.utils.Constants.FAVOURITE_FRAGMENT
 import me.meenagopal24.wallpapers.utils.Functions
 import me.meenagopal24.wallpapers.utils.MyWallpaperManager
 import me.meenagopal24.wallpapers.utils.WallpaperListHelper
@@ -32,11 +33,13 @@ import me.meenagopal24.wallpapers.utils.WallpaperListHelper
 private const val ARG_PARAM1 = "param1"
 public const val PRE_LIST = "PreList"
 public const val OPEN_POSITION = "openPosition"
+public const val HIDE_TEXT = "hide_text"
 
 class PreviewFragment() :
     Fragment(), WallpaperResponse {
     lateinit var preList: ArrayList<wallpapers.item>
     private var openPosition: Int = -1
+    private var hide_text: Boolean = false
     private var position: Int = 0;
     lateinit var wallpapers: RecyclerView
     private lateinit var progressDialog: Dialog
@@ -48,6 +51,7 @@ class PreviewFragment() :
         arguments?.let {
             openPosition = it.getInt(OPEN_POSITION)
             preList = it.getParcelableArrayList(PRE_LIST)!!
+            hide_text = it.getBoolean(HIDE_TEXT)
             WallpaperListHelper(requireContext()).saveList(preList, openPosition)
         }
     }
@@ -66,6 +70,11 @@ class PreviewFragment() :
         if (Constants.recyclerState != null) {
             wallpapers.layoutManager?.onRestoreInstanceState(Constants.recyclerState)
         }
+        if (hide_text){
+            view.findViewById<LinearLayout>(R.id.text_area_for_favourite).visibility = View.INVISIBLE
+        }
+        val name = view.findViewById<TextView>(R.id.wallpaper_text)
+        val imageView = view.findViewById<ImageView>(R.id.add_to_fav)
         initializeRecyclerView(preList, position)
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(wallpapers)
@@ -75,6 +84,12 @@ class PreviewFragment() :
                     super.onScrolled(recyclerView, dx, dy)
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager?
                     this@PreviewFragment.position = layoutManager!!.findFirstVisibleItemPosition()
+                    changeText(position, name)
+                    if (FavouriteWallpaperHelper(requireContext()).getIsContains(preList[position].uuid)) {
+                        imageView.setImageResource(R.drawable.fi_fill_heart)
+                    } else {
+                        imageView.setImageResource(R.drawable.fi_ss_heart)
+                    }
                 }
             }
         wallpapers.addOnScrollListener(onScrollListener)
@@ -84,14 +99,46 @@ class PreviewFragment() :
         view.findViewById<Button>(R.id.download_wallpaper).setOnClickListener {
             preList[position].let { it1 ->
                 MyWallpaperManager(
-                    context = requireContext(),
                     uri = it1.url,
+                    context = requireContext(),
                     flag = 0,
-                    close = this
+                    close = this,
                 ).saveBitmapToStorage("${System.currentTimeMillis()}.jpg")
             }
         }
+        imageView.setOnClickListener {
+            addOrRemoveFav(preList[position].uuid, true, imageView)
+        }
 
+    }
+
+    private fun changeText(position: Int, name: TextView) {
+        name.text = preList[position].name
+    }
+
+    private fun addOrRemoveFav(uuid: String, add: Boolean, imageView: ImageView) {
+        if (!FavouriteWallpaperHelper(requireContext()).getIsContains(preList[position].uuid)) {
+            FavouriteWallpaperHelper(requireContext()).addFav(
+                favourite(preList[position].name, preList[position].url, uuid)
+            )
+            view?.let {
+                Snackbar.make(
+                    requireContext(),
+                    it, "Wallpaper successfully added", Snackbar.LENGTH_SHORT
+                ).show()
+            }
+            imageView.setImageResource(R.drawable.fi_fill_heart)
+        } else {
+            FavouriteWallpaperHelper(requireContext()).removeFav(preList[position].uuid)
+            view?.let {
+                Snackbar.make(
+                    requireContext(),
+                    it, "Removed from favourite", Snackbar.LENGTH_SHORT
+                ).show()
+            }
+            imageView.setImageResource(R.drawable.fi_ss_heart)
+
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -157,24 +204,24 @@ class PreviewFragment() :
         progressDialog.window?.attributes = layoutParams
         progressDialog.window?.setBackgroundDrawableResource(R.color.transparent)
         progressDialog.show()
-
         preList[position].let {
             MyWallpaperManager(
                 context = requireContext(),
                 uri = it.url,
                 flag = f,
-                close = this
+                close = this@PreviewFragment,
             ).getWallpaperReady()
         }
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(preList: ArrayList<wallpapers.item>?, openPosition: Int = -1) =
+        fun newInstance(preList: ArrayList<wallpapers.item>?, openPosition: Int = -1 , remove : Boolean = false) =
             PreviewFragment().apply {
                 arguments = Bundle().apply {
                     putParcelableArrayList(PRE_LIST, preList)
                     putInt(OPEN_POSITION, openPosition)
+                    putBoolean(HIDE_TEXT, remove)
                 }
             }
     }

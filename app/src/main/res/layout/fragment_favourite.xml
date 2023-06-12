@@ -21,24 +21,39 @@
             android:textColor="@color/black"
             android:textSize="22sp" />
     </LinearLayout>
-
-    <com.airbnb.lottie.LottieAnimationView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favourite_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/no_data_fav" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp" />
+    <LinearLayout
+        android:id="@+id/when_favourite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/no_data_fav" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="50dp"
-        android:textAllCaps="false"
-        android:fontFamily="@font/open_sans"
-        android:gravity="center"
-        android:padding="15dp"
-        android:text="Add to favourite now" />
+        <Button
+            android:id="@+id/fav_now"
+            android:elevation="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="50dp"
+            android:textAllCaps="false"
+            android:fontFamily="@font/open_sans"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="Add to favourite now" />
+    </LinearLayout>
 
 </FrameLayout>

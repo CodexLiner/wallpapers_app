@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 
 class StaggeredAdapter(
     private val list: MutableList<wallpapers.item>,
-    private val change: ChangeInterface
+    private val change: ChangeInterface,
 ) :
     RecyclerView.Adapter<StaggeredAdapter.Holder>() {
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -32,6 +33,7 @@ class StaggeredAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         Glide.with(holder.itemView.context).load(list[position].url)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .placeholder(R.drawable.grey).into(holder.sImage)
         holder.sImage.setOnClickListener {
             change.changeFragment(position)

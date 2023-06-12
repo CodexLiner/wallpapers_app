@@ -29,13 +29,15 @@ class InternetConnectivityReceiver(private val supportFragmentManager: FragmentM
 
     private fun doFragmentRemove() {
         val fragment = supportFragmentManager.findFragmentByTag(CONNECTIVITY_FRAGMENT)
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
-            activity.bottomNav.visibility = View.VISIBLE
+        try {
+            if (fragment != null) {
+                supportFragmentManager.beginTransaction()
+                    .remove(fragment)
+                    .commit()
+                activity.bottomNav.visibility = View.VISIBLE
 
-        }
+            }
+        }catch (_ : Exception){}
     }
 
     private fun doFragment() {

@@ -59,7 +59,7 @@ class WallpaperListHelper(context: Context) :
             do {
                 val name = cursor.getString(cursor.getColumnIndex(WALLPAPER_NAME))
                 val url = cursor.getString(cursor.getColumnIndex(WALLPAPER_URL))
-                list.add(wallpapers.item(name, url))
+                list.add(wallpapers.item(name, url , ""))
             } while (cursor.moveToNext())
         }
 

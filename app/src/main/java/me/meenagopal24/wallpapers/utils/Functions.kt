@@ -1,11 +1,12 @@
 package me.meenagopal24.wallpapers.utils
 
 import android.app.Activity
+import androidx.browser.customtabs.CustomTabsIntent.Builder;
 import android.content.Context
-import android.os.Build
+import android.net.Uri
 import android.view.Window
-import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import me.meenagopal24.wallpapers.R
@@ -27,6 +28,15 @@ class Functions(private val m: FragmentManager) {
     }
 
     companion object {
+        fun o(context: Context?, url: String?) {
+            val builder: CustomTabsIntent.Builder = Builder()
+            builder.setShowTitle(true)
+            builder.setUrlBarHidingEnabled(true)
+            val intent: CustomTabsIntent = builder.build()
+            if (context != null) {
+                intent.launchUrl(context, Uri.parse(url))
+            }
+        }
         public fun windowTrans(activity: Activity, b: Boolean) {
             val window: Window = activity.window
             if (b) {

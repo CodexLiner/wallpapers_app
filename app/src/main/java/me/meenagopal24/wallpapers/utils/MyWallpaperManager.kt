@@ -2,8 +2,6 @@ package me.meenagopal24.wallpapers.utils
 
 import android.Manifest
 import android.app.Activity
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
@@ -14,8 +12,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.util.Log
-import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -23,8 +19,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.WallpaperResponse
 import java.io.File
@@ -32,8 +26,13 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-public class MyWallpaperManager(private val uri: String, val context: Context, val flag: Int , val close : WallpaperResponse) {
-    val wallpaperManager: WallpaperManager = WallpaperManager.getInstance(context)
+public class MyWallpaperManager(
+    private val uri: String,
+    val context: Context,
+    val flag: Int,
+    val close: WallpaperResponse,
+) {
+    private val wallpaperManager: WallpaperManager = WallpaperManager.getInstance(context)
     val name: FrameLayout = (context as Activity).findViewById<FrameLayout>(R.id.main_layout)
     fun getWallpaperReady() {
         try {
@@ -89,9 +88,10 @@ public class MyWallpaperManager(private val uri: String, val context: Context, v
             (context as Activity).runOnUiThread {
                 Snackbar.make(name, "Wallpaper Applied successfully", Snackbar.LENGTH_SHORT).show()
             }
-           try {
-              close.onWallpaperApplied()
-           }catch (ignored : Exception){}
+            try {
+                close.onWallpaperApplied()
+            } catch (ignored: Exception) {
+            }
         }.start()
 
     }

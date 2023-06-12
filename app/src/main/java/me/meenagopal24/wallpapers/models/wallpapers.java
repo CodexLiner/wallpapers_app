@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +16,22 @@ public class wallpapers {
     public static class item implements Parcelable {
         String name;
         String url;
+        @NotNull
+        String uuid;
 
-        public item(String name, String url) {
+        @NotNull
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(@NotNull String uuid) {
+            this.uuid = uuid;
+        }
+
+        public item(String name, String url, @NotNull String uuid) {
             this.name = name;
             this.url = url;
+            this.uuid = uuid;
         }
 
         protected item(Parcel in) {

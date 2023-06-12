@@ -36,8 +36,8 @@ class StaggeredFragment : Fragment(),
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_staggered, container, false)
-        val staggred: RecyclerView = view.findViewById(R.id.staggered_recycler)
-        staggred.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
+        val staggered: RecyclerView = view.findViewById(R.id.staggered_recycler)
+        staggered.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
 
         list = arrayListOf()
         list.add("https://images.pexels.com/photos/1624496/pexels-photo-1624496.jpeg")

@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
+    <com.jsibbold.zoomage.ZoomageView
+        android:id="@+id/wallpaper_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center" />
     <TextView
+        android:visibility="gone"
         android:id="@+id/wallpaper_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,13 +20,7 @@
         android:layout_marginTop="100dp"
         android:fontFamily="@font/open_sans_semibold"
         android:text="WallPaper Details"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="17sp"
         android:textStyle="bold" />
-
-    <com.jsibbold.zoomage.ZoomageView
-        android:id="@+id/wallpaper_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="center" />
 </FrameLayout>

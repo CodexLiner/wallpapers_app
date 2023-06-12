@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
+import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
+import me.meenagopal24.wallpapers.databases.favourite
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
