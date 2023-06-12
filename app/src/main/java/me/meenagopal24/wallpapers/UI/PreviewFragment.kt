@@ -2,8 +2,10 @@ package me.meenagopal24.wallpapers.UI
 
 import android.app.Activity
 import android.app.Dialog
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.Toast
@@ -12,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -129,7 +132,6 @@ class PreviewFragment() :
         dialog.findViewById<Button>(R.id.home).setOnClickListener {
             setFlag(0)
             dialog.dismiss()
-            initializeRecyclerView(preList, position)
         }
         dialog.findViewById<Button>(R.id.lock).setOnClickListener {
             setFlag(1)
@@ -179,8 +181,17 @@ class PreviewFragment() :
 
     override fun onWallpaperApplied() {
         progressDialog.dismiss()
-        if (Build.BRAND.equals("Nothing" , true)) {
-            requireActivity().onBackPressed()
+        try {
+            requireActivity().runOnUiThread {
+                wallpaperSuccessEvent()
+            }
+        } catch (_: Exception) {
         }
+    }
+
+    private fun wallpaperSuccessEvent() {
+        view?.findViewById<LottieAnimationView>(R.id.lottie_layer_success)?.playAnimation()
+        val mediaPlayer = MediaPlayer.create(context, R.raw.succes_sound)
+        mediaPlayer.start()
     }
 }
