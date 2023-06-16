@@ -5,9 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import me.meenagopal24.wallpapers.models.wallpapers
-import java.util.UUID
 
 class FavouriteWallpaperHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -18,12 +16,13 @@ class FavouriteWallpaperHelper(context: Context) :
         private const val WALLPAPER_NAME = "name"
         private const val WALLPAPER_URL = "url"
         private const val WALLPAPER_UUID = "uuid"
+        private const val WALLPAPER_CATEGORY = "category"
         private const val ID = "id"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         val createTableQuery =
-            "CREATE TABLE $TABLE_NAME ($WALLPAPER_NAME TEXT , $WALLPAPER_URL TEXT ,$ID INTEGER PRIMARY KEY , $WALLPAPER_UUID TXT )"
+            "CREATE TABLE $TABLE_NAME ($WALLPAPER_NAME TEXT , $WALLPAPER_URL TEXT ,$ID INTEGER PRIMARY KEY , $WALLPAPER_UUID TXT , $WALLPAPER_CATEGORY TXT )"
         db.execSQL(createTableQuery)
     }
 
@@ -31,14 +30,15 @@ class FavouriteWallpaperHelper(context: Context) :
         // Handle database upgrades if needed
     }
 
-    fun addFav(data: favourite) {
+    fun addFav(data: wallpapers.item) {
         val db = writableDatabase
 //        db.delete(TABLE_NAME, null, null)
         val values = ContentValues()
 
         values.put(WALLPAPER_UUID, data.uuid)
         values.put(WALLPAPER_NAME, data.name)
-        values.put(WALLPAPER_URL, data.url)
+        values.put(WALLPAPER_URL, data.image)
+        values.put(WALLPAPER_CATEGORY, data.category)
 
         db.insert(TABLE_NAME, null, values)
         db.close()
@@ -56,7 +56,8 @@ class FavouriteWallpaperHelper(context: Context) :
                 val name = cursor.getString(cursor.getColumnIndex(WALLPAPER_NAME))
                 val url = cursor.getString(cursor.getColumnIndex(WALLPAPER_URL))
                 val uuid = cursor.getString(cursor.getColumnIndex(WALLPAPER_UUID))
-                list.add(wallpapers.item(name, url, uuid))
+                val category = cursor.getString(cursor.getColumnIndex(WALLPAPER_CATEGORY))
+                list.add(wallpapers.item(name, url, uuid ,url, category))
             } while (cursor.moveToNext())
         }
 

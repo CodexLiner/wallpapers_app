@@ -41,8 +41,10 @@ class InternetConnectivityReceiver(private val supportFragmentManager: FragmentM
     }
 
     private fun doFragment() {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.main_layout, ConnectivityFragment(), CONNECTIVITY_FRAGMENT).commit()
-        activity.bottomNav.visibility = View.GONE
+       try {
+           supportFragmentManager.beginTransaction()
+               .add(R.id.main_layout, ConnectivityFragment(), CONNECTIVITY_FRAGMENT).commit()
+           activity.bottomNav.visibility = View.GONE
+       }catch (_:java.lang.Exception){}
     }
 }

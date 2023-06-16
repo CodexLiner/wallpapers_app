@@ -10,14 +10,30 @@ import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class wallpapers {
     public static class item implements Parcelable {
         String name;
-        String url;
+        String image;
         @NotNull
         String uuid;
+        String thumbnail, category ;
+
+        public String getThumbnail() {
+            return thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
 
         @NotNull
         public String getUuid() {
@@ -28,15 +44,23 @@ public class wallpapers {
             this.uuid = uuid;
         }
 
-        public item(String name, String url, @NotNull String uuid) {
+        public item(String name, String image, @NotNull String uuid) {
             this.name = name;
-            this.url = url;
+            this.image = image;
             this.uuid = uuid;
+        }
+
+        public item(String name, String image, @NotNull String uuid, String thumbnail, String category) {
+            this.name = name;
+            this.image = image;
+            this.uuid = uuid;
+            this.thumbnail = thumbnail;
+            this.category = category;
         }
 
         protected item(Parcel in) {
             name = in.readString();
-            url = in.readString();
+            image = in.readString();
         }
 
         public static final Creator<item> CREATOR = new Creator<item>() {
@@ -59,12 +83,12 @@ public class wallpapers {
             this.name = name;
         }
 
-        public String getUrl() {
-            return url;
+        public String getImage() {
+            return image;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
+        public void setImage(String image) {
+            this.image = image;
         }
 
 
@@ -77,10 +101,10 @@ public class wallpapers {
         @Override
         public void writeToParcel(@NonNull Parcel parcel, int i) {
             parcel.writeString(name);
-            parcel.writeString(url);
+            parcel.writeString(image);
         }
     }
-    @SerializedName("wallpapers")
+    @SerializedName("result")
     ArrayList<item> list;
 
     public ArrayList<item> getList() {

@@ -1,6 +1,5 @@
 package me.meenagopal24.wallpapers.network;
 
-import me.meenagopal24.wallpapers.models.categories;
 import me.meenagopal24.wallpapers.models.wallpapers;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -10,9 +9,9 @@ public interface Api {
     @GET("/wallpaper")
     Call<wallpapers> getWallpaper();
 
-    @GET("/wallpaper")
+    @GET("/wallpaper/get")
     Call<wallpapers> getWallpaperByCategory(@Query("category") String category);
 
     @GET("/category")
-    Call<categories> getCategories();
+    Call<wallpapers> getCategories();
 }

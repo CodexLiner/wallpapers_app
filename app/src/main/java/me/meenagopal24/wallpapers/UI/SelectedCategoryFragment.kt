@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -26,8 +27,7 @@ import retrofit2.Response
 private const val TITLE = "param1"
 private const val CATEGORY = "param2"
 
-@SuppressLint("StaticFieldLeak")
-lateinit var progress: ProgressBar
+
 
 class SelectedCategoryFragment() : ChangeInterface,
     Fragment() {
@@ -36,6 +36,7 @@ class SelectedCategoryFragment() : ChangeInterface,
     private var category: String? = null
     lateinit var list: ArrayList<wallpapers.item>
     lateinit var wallpapersRecycler: RecyclerView
+    lateinit var progress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,7 @@ class SelectedCategoryFragment() : ChangeInterface,
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_selected_category, container, false)
@@ -64,21 +65,29 @@ class SelectedCategoryFragment() : ChangeInterface,
     }
 
     private fun getItemsFromCategory() {
-        val call: Call<wallpapers> = RetrofitClient.getInstance().api.getWallpaperByCategory(name)
+        val when_favourite: LinearLayout? = view?.findViewById(R.id.when_favourite)
+        val call: Call<wallpapers> =
+            RetrofitClient.getInstance().api.getWallpaperByCategory(category)
         call.enqueue(object : Callback<wallpapers> {
             override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
                 progress.visibility = View.GONE
-                list = response.body()?.list as ArrayList<wallpapers.item>
-                wallpapersRecycler.adapter =
-                    response.body()?.list?.let {
-                        StaggeredAdapter(
-                            it,
-                            this@SelectedCategoryFragment
-                        )
-                    }
+                if (response.body()?.list != null && response.body()?.list?.size != 0) {
+                    list = response.body()?.list as ArrayList<wallpapers.item>
+                    wallpapersRecycler.adapter =
+                        response.body()?.list?.let {
+                            StaggeredAdapter(
+                                it,
+                                this@SelectedCategoryFragment
+                            )
+                        }
+                    when_favourite?.visibility = View.INVISIBLE
+                } else {
+                    when_favourite?.visibility = View.VISIBLE
+                }
             }
 
             override fun onFailure(call: Call<wallpapers>, t: Throwable) {
+                when_favourite?.visibility = View.VISIBLE
                 Toast.makeText(requireContext(), "something went wrong", Toast.LENGTH_SHORT).show()
             }
 

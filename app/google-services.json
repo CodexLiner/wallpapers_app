@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "868743322816",
+    "project_id": "wallpaper-f8669",
+    "storage_bucket": "wallpaper-f8669.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868743322816:android:ab37fef979a088cf18a125",
+        "android_client_info": {
+          "package_name": "me.meenagopal24.wallpapers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868743322816-hjaelclgnb8300gf5abrp8h2voe61ici.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyz87jwOL2zYMLr963C0-Jr6653LuBp60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868743322816-hjaelclgnb8300gf5abrp8h2voe61ici.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

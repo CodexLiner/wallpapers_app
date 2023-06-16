@@ -10,6 +10,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.utils.Constants.BASE_URL_IMAGE
+import me.meenagopal24.wallpapers.utils.Functions
 
 class StaggeredAdapter(
     private val list: MutableList<wallpapers.item>,
@@ -32,7 +34,8 @@ class StaggeredAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        Glide.with(holder.itemView.context).load(list[position].url)
+        Glide.with(holder.itemView.context)
+            .load(BASE_URL_IMAGE + list[position].category.trim() + "/" + list[position].image.trim())
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .placeholder(R.drawable.grey).into(holder.sImage)
         holder.sImage.setOnClickListener {

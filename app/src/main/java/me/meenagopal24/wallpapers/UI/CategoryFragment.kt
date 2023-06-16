@@ -1,6 +1,7 @@
 package me.meenagopal24.wallpapers.UI
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.CategoryAdapter
+import me.meenagopal24.wallpapers.databases.CategoryListHelper
+import me.meenagopal24.wallpapers.databases.WallpaperListHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
-import me.meenagopal24.wallpapers.models.categories
+import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
 import me.meenagopal24.wallpapers.utils.Constants
 import retrofit2.Call
@@ -38,29 +41,35 @@ class CategoryFragment : Fragment(),
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_category, container, false)
         catRecycler = view.findViewById<RecyclerView>(R.id.category_recycler)
         catRecycler.layoutManager =
             GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
-        getCategories()
+        if (CategoryListHelper(requireContext()).getList().isNotEmpty()) {
+            catRecycler.adapter = CategoryAdapter(
+                CategoryListHelper(requireContext()).getList(),
+                this@CategoryFragment
+            )
+        } else getCategories()
         return view
     }
 
     private fun getCategories() {
-        val call: Call<categories> = RetrofitClient.getInstance().api.categories
-        call.enqueue(object : Callback<categories> {
-            override fun onResponse(call: Call<categories>, response: Response<categories>) {
-                catRecycler.adapter =
-                    response.body()?.list?.let { CategoryAdapter(it, this@CategoryFragment) }
-            }
-
-            override fun onFailure(call: Call<categories>, t: Throwable) {
+        val call: Call<wallpapers> = RetrofitClient.getInstance().api.categories
+        call.enqueue(object : Callback<wallpapers> {
+            override fun onFailure(call: Call<wallpapers>, t: Throwable) {
                 Toast.makeText(requireContext(), "something went", Toast.LENGTH_SHORT).show()
             }
-
+            override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
+                catRecycler.adapter =
+                    response.body()?.list?.let {
+                        CategoryListHelper(requireContext()).saveList(response.body()?.list as ArrayList<wallpapers.item>)
+                        CategoryAdapter(it, this@CategoryFragment)
+                    }
+            }
         })
     }
 

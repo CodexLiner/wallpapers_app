@@ -7,4 +7,6 @@
     <string name="favourite">Favourite</string>
     <string name="download">Download</string>
     <string name="apply">Apply</string>
+    <string name="add_to_favorite_wallpapers_now">Add to favorite wallpapers now</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -21,12 +21,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         val connectivityReceiver = InternetConnectivityReceiver(supportFragmentManager, this)
         registerReceiver(
             connectivityReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         )
-
         supportFragmentManager.beginTransaction().disallowAddToBackStack()
             .add(R.id.main_layout, HomeFragment(), HOME_FRAGMENT).commit()
 
@@ -72,11 +71,7 @@ class MainActivity : AppCompatActivity() {
             ).commit()
             bottomNav.selectedItemId = R.id.home_bottom
         } else {
-            if (supportFragmentManager.backStackEntryCount > 0 && supportFragmentManager.getBackStackEntryAt(
-                    supportFragmentManager.backStackEntryCount - 1
-                ).name == PREVIEW_FRAGMENT || supportFragmentManager.backStackEntryCount > 0 && supportFragmentManager.getBackStackEntryAt(
-                    supportFragmentManager.backStackEntryCount - 1
-                ).name == "old_preview_fav"
+            if (checkOnTop(PREVIEW_FRAGMENT) || checkOnTop("old_preview_fav")
             ) {
                 bottomModify(true)
                 Functions.windowTrans(this, false)

@@ -18,10 +18,9 @@ import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
 import me.meenagopal24.wallpapers.utils.Functions
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
 class FavouriteFragment : Fragment(), ChangeInterface {
     private var param1: String? = null
     private var param2: String? = null
@@ -39,7 +38,6 @@ class FavouriteFragment : Fragment(), ChangeInterface {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
         try {
             (requireActivity() as MainActivity).bottomNav.selectedItemId = R.id.fav_bottom
         } catch (_: java.lang.Exception) {
@@ -49,9 +47,11 @@ class FavouriteFragment : Fragment(), ChangeInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         list = FavouriteWallpaperHelper(requireContext()).getFavList()
         val recyclerView: RecyclerView = view.findViewById(R.id.favourite_recycler)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         recyclerView.adapter = StaggeredAdapter(list, this@FavouriteFragment)
         if (list.isNotEmpty()) {
             view.findViewById<LinearLayout>(R.id.when_favourite).visibility = View.GONE
@@ -77,7 +77,7 @@ class FavouriteFragment : Fragment(), ChangeInterface {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(
                 R.id.main_layout,
-                PreviewFragment.newInstance(preList = list, position , true),
+                PreviewFragment.newInstance(preList = list, position, false),
                 "old_preview_fav"
             ).addToBackStack("old_preview_fav").commit()
     }

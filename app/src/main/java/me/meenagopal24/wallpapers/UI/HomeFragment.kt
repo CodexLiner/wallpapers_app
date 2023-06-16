@@ -1,19 +1,23 @@
 package me.meenagopal24.wallpapers.UI
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.airbnb.lottie.LottieAnimationView
+import com.facebook.shimmer.ShimmerFrameLayout
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
-import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
-import me.meenagopal24.wallpapers.databases.favourite
+import me.meenagopal24.wallpapers.databases.AllWallpaperListHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
@@ -22,24 +26,14 @@ import me.meenagopal24.wallpapers.utils.Functions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class HomeFragment : Fragment(),
     ChangeInterface {
-    private var param1: String? = null
-    private var param2: String? = null
     lateinit var list: ArrayList<wallpapers.item>
     lateinit var wallpapersRecycler: RecyclerView
+    lateinit var swipeRefresh: SwipeRefreshLayout
+    lateinit var when_favourite: LinearLayout
+    lateinit var progress: ProgressBar
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,9 +42,19 @@ class HomeFragment : Fragment(),
         Functions.windowTrans(requireActivity(), false)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         wallpapersRecycler = view.findViewById(R.id.staggered_recycler)
+        when_favourite = view.findViewById(R.id.when_favourite)
+        progress = view.findViewById(R.id.progress)
         wallpapersRecycler.layoutManager =
             GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
-        getWallpapers()
+        swipeRefresh = view.findViewById(R.id.swipeRefresh)
+        swipeRefresh.setOnRefreshListener { getWallpapers() }
+        view.findViewById<Button>(R.id.refresh).setOnClickListener { getWallpapers() }
+        if (AllWallpaperListHelper(requireContext()).getList().isNotEmpty()) {
+            setAdapter(AllWallpaperListHelper(requireContext()).getList())
+        }else {
+            getWallpapers()
+        }
+
         return view;
     }
 
@@ -58,27 +62,38 @@ class HomeFragment : Fragment(),
         val call: Call<wallpapers> = RetrofitClient.getInstance().api.wallpaper
         call.enqueue(object : Callback<wallpapers> {
             override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
-                list = response.body()?.list as ArrayList<wallpapers.item>
-                wallpapersRecycler.adapter =
-                    response.body()?.list?.let { StaggeredAdapter(it, this@HomeFragment) }
+                setAdapter(response.body()?.list)
+                response.body()?.let { AllWallpaperListHelper(requireContext()).saveList(it.list) }
             }
 
             override fun onFailure(call: Call<wallpapers>, t: Throwable) {
+                swipeRefresh.isRefreshing = false
                 Toast.makeText(requireContext(), "something went wrong", Toast.LENGTH_SHORT).show()
             }
 
         })
+
         CategoryFragment
+    }
+
+    private fun setAdapter(list: ArrayList<wallpapers.item>?) {
+        progress.visibility = View.GONE
+        if (list != null && list.size != 0) {
+            this.list = list as ArrayList<wallpapers.item>
+            wallpapersRecycler.adapter = list.let { StaggeredAdapter(it, this@HomeFragment) }
+            swipeRefresh.isRefreshing = false
+            when_favourite.visibility = View.INVISIBLE
+
+        } else {
+            when_favourite.visibility = View.VISIBLE
+        }
     }
 
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+                arguments = Bundle().apply {}
             }
     }
 
@@ -88,7 +103,6 @@ class HomeFragment : Fragment(),
             .commit()
     }
 
-    override fun changeFragment(title: String?, category: String?) {
+    override fun changeFragment(title: String?, category: String?) {}
 
-    }
 }

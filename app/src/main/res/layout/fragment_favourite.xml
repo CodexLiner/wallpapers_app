@@ -44,16 +44,19 @@
 
         <Button
             android:id="@+id/fav_now"
-            android:elevation="0dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="50dp"
-            android:textAllCaps="false"
+            android:elevation="0dp"
             android:fontFamily="@font/open_sans"
             android:gravity="center"
             android:padding="15dp"
-            android:text="Add to favourite now" />
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/add_to_favorite_wallpapers_now"
+            android:textAllCaps="false"
+            android:textColor="@color/black" />
     </LinearLayout>
 
 </FrameLayout>

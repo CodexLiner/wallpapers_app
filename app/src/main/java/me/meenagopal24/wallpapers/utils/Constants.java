@@ -10,7 +10,13 @@ import me.meenagopal24.wallpapers.UI.SettingsFragment;
 import me.meenagopal24.wallpapers.UI.ConnectivityFragment;
 
 public class Constants {
-    public final static String BASE_URL = "https://wallpaper-server.vercel.app";
+    //    public final static String BASE_URL = "https://wallpaper-server.vercel.app";
+    public final static String BASE_URL = "https://me.meenagopal24.me";
+    public final static String BASE_URL_CONTENT = "https://meenagopal24.me/wallpaperapi/uploads";
+    public final static String BASE_URL_IMAGE = BASE_URL_CONTENT + "/";
+
+    public final static String BASE_URL_THUMBNAIL = BASE_URL_CONTENT + "/thumbnails/";
+    public final static String BASE_URL_CATEGORY = BASE_URL_CONTENT + "/category_thumbnails/";
     public static final String HOME_FRAGMENT = HomeFragment.class.getName();
     public static final String CATEGORY_FRAGMENT = CategoryFragment.class.getName();
     public static final String SETTING_FRAGMENT = SettingsFragment.class.getName();

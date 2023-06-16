@@ -5,9 +5,9 @@ import static me.meenagopal24.wallpapers.utils.Constants.BASE_URL;
 import android.util.Base64;
 import java.util.concurrent.TimeUnit;
 
-import me.meenagopal24.wallpapers.BuildConfig;
+
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+//import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -24,11 +24,11 @@ public class RetrofitClient {
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
 
         //for logs of api response in debug mode
-        if (BuildConfig.DEBUG) {
-            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            okHttpClientBuilder.addInterceptor(interceptor);
-        }
+//        if (BuildConfig.DEBUG) {
+//            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+//            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//            okHttpClientBuilder.addInterceptor(interceptor);
+//        }
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

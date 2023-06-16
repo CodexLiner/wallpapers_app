@@ -21,6 +21,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.snackbar.Snackbar
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.WallpaperResponse
+import me.meenagopal24.wallpapers.utils.Constants.BASE_URL_IMAGE
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -40,7 +41,7 @@ public class MyWallpaperManager(
             val screenWidth = context.resources.displayMetrics.widthPixels
             val screenHeight = context.resources.displayMetrics.heightPixels
             // Set the wallpaper
-            Glide.with(context).asBitmap().load(uri).into(object : CustomTarget<Bitmap?>() {
+            Glide.with(context).asBitmap().load(BASE_URL_IMAGE+uri).into(object : CustomTarget<Bitmap?>() {
                 override fun onResourceReady(
                     bitmap: Bitmap,
                     transition: Transition<in Bitmap?>?,

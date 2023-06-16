@@ -9,11 +9,13 @@ import com.bumptech.glide.Glide
 import com.jsibbold.zoomage.ZoomageView
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.utils.Constants
 
-class PreviewAdapter(private val list: MutableList<wallpapers.item>?)  : RecyclerView.Adapter<PreviewAdapter.holder>() {
-    class holder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val wallpaper : ZoomageView  = itemView.findViewById(R.id.wallpaper_container)
-        val details : TextView = itemView.findViewById(R.id.wallpaper_text)
+class PreviewAdapter(private val list: MutableList<wallpapers.item>?) :
+    RecyclerView.Adapter<PreviewAdapter.holder>() {
+    class holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val wallpaper: ZoomageView = itemView.findViewById(R.id.wallpaper_container)
+        val details: TextView = itemView.findViewById(R.id.wallpaper_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): holder {
@@ -28,6 +30,11 @@ class PreviewAdapter(private val list: MutableList<wallpapers.item>?)  : Recycle
 
     override fun onBindViewHolder(holder: holder, position: Int) {
         holder.details.text = list?.get(position)?.name ?: ""
-        Glide.with(holder.wallpaper).load(list?.get(position)?.url).placeholder(R.drawable.grey).into(holder.wallpaper)
+        Glide.with(holder.wallpaper).load(
+            Constants.BASE_URL_IMAGE + ((list?.get(position)?.category)?.trim()) + "/" + ((list?.get(
+                position
+            )?.image)?.trim())
+        )
+            .into(holder.wallpaper)
     }
 }

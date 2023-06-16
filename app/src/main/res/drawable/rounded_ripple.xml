@@ -1,0 +1,4 @@
+<shape android:shape="oval" xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?android:attr/colorControlHighlight">
+    <solid android:color="#0C000000" />
+</shape>
