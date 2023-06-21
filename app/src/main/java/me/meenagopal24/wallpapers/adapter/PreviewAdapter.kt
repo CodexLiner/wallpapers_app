@@ -34,7 +34,6 @@ class PreviewAdapter(private val list: MutableList<wallpapers.item>?) :
             Constants.BASE_URL_IMAGE + ((list?.get(position)?.category)?.trim()) + "/" + ((list?.get(
                 position
             )?.image)?.trim())
-        )
-            .into(holder.wallpaper)
+        ).into(holder.wallpaper)
     }
 }

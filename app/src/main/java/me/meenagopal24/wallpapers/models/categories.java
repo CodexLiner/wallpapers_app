@@ -13,7 +13,7 @@ public class categories {
         String image;
         @SerializedName("name")
         String category;
-
+        String url;
         public String getCategory() {
             return category;
         }
@@ -71,7 +71,7 @@ public class categories {
             this.url = url;
         }
 
-        String url;
+
     }
 
     @SerializedName("result")

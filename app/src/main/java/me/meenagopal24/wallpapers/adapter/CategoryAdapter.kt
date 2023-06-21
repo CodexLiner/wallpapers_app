@@ -35,11 +35,13 @@ class CategoryAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        Glide.with(holder.itemView.context).load(BASE_URL_CATEGORY + list?.get(position)?.image?.trim())
-            .into(holder.bg)
+        Glide.with(holder.itemView.context)
+            .load(BASE_URL_CATEGORY + list?.get(position)?.image?.trim()).into(holder.bg)
         holder.title.text = list?.get(position)?.name
         holder.bg.setOnClickListener {
-           if (list?.isNotEmpty() == true){ change.changeFragment(list[position].name?.trim(), list[position].name?.trim())}
+            if (list?.isNotEmpty() == true) {
+                change.changeFragment(list[position].name?.trim(), list[position].name?.trim())
+            }
         }
     }
 }

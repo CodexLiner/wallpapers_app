@@ -1,17 +1,15 @@
 package me.meenagopal24.wallpapers
 
-import android.app.Activity
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import me.meenagopal24.wallpapers.UI.HomeFragment
-import me.meenagopal24.wallpapers.temp.InternetConnectivityReceiver
+import me.meenagopal24.wallpapers.services.InternetConnectivityReceiver
 import me.meenagopal24.wallpapers.utils.Constants.*
 import me.meenagopal24.wallpapers.utils.Functions
 
@@ -22,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         val connectivityReceiver = InternetConnectivityReceiver(supportFragmentManager, this)
         registerReceiver(
             connectivityReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -87,16 +86,16 @@ class MainActivity : AppCompatActivity() {
             layoutParams.height = Functions.getDp(60, this)
             frameLayout.visibility = View.VISIBLE
             bottomNav.setPadding(0, 0, 0, 0)
-
         } else {
             frameLayout.visibility = View.GONE
         }
     }
 
     private fun checkOnTop(fragment: String): Boolean {
-        return if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.getBackStackEntryAt(
-            supportFragmentManager.backStackEntryCount - 1
-        ).name == fragment
+        return if (supportFragmentManager.backStackEntryCount > 0)
+            supportFragmentManager.getBackStackEntryAt(
+                supportFragmentManager.backStackEntryCount - 1
+            ).name == fragment
         else false
     }
 }
