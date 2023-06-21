@@ -21,22 +21,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class CategoryFragment : Fragment(),
     ChangeInterface {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     lateinit var catRecycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -45,9 +35,10 @@ class CategoryFragment : Fragment(),
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_category, container, false)
-        catRecycler = view.findViewById<RecyclerView>(R.id.category_recycler)
+        catRecycler = view.findViewById(R.id.category_recycler)
         catRecycler.layoutManager =
             GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
+
         if (CategoryListHelper(requireContext()).getList().isNotEmpty()) {
             catRecycler.adapter = CategoryAdapter(
                 CategoryListHelper(requireContext()).getList(),
@@ -56,7 +47,6 @@ class CategoryFragment : Fragment(),
         } else getCategories()
         return view
     }
-
     private fun getCategories() {
         val call: Call<wallpapers> = RetrofitClient.getInstance().api.categories
         call.enqueue(object : Callback<wallpapers> {
@@ -77,17 +67,11 @@ class CategoryFragment : Fragment(),
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             CategoryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+                arguments = Bundle().apply {}
             }
     }
 
-    override fun changeFragment(position: Int) {
-
-    }
-
+    override fun changeFragment(position: Int) { }
     override fun changeFragment(title: String, category: String) {
         requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(Constants.PREVIEW_FRAGMENT)
