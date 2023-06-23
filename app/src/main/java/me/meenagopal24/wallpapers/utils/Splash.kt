@@ -3,12 +3,15 @@ package me.meenagopal24.wallpapers.utils
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import me.meenagopal24.wallpapers.MainActivity
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.UI.CategoryFragment
+import me.meenagopal24.wallpapers.adapter.CategoryAdapter
 import me.meenagopal24.wallpapers.databases.AllWallpaperListHelper
+import me.meenagopal24.wallpapers.databases.CategoryListHelper
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
 import retrofit2.Call
@@ -22,6 +25,7 @@ class Splash : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         getWallpapers()
+        getCategories()
         val handler = Handler()
         handler.postDelayed({ // Start your desired activity here
             val intent = Intent(this@Splash, MainActivity::class.java)
@@ -48,4 +52,18 @@ class Splash : AppCompatActivity() {
 
         CategoryFragment
     }
+
+    private fun getCategories() {
+        val call: Call<wallpapers> = RetrofitClient.getInstance().api.categories
+        call.enqueue(object : Callback<wallpapers> {
+            override fun onFailure(call: Call<wallpapers>, t: Throwable) {}
+
+            override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
+                runOnUiThread {
+                    CategoryListHelper(this@Splash).saveList(response.body()?.list as ArrayList<wallpapers.item>)
+                }
+            }
+        })
+    }
+
 }
