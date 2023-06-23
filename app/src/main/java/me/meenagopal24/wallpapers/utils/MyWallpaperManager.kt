@@ -3,6 +3,7 @@ package me.meenagopal24.wallpapers.utils
 import android.Manifest
 import android.app.Activity
 import android.app.WallpaperManager
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,7 +13,9 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -41,21 +44,23 @@ public class MyWallpaperManager(
             val screenWidth = context.resources.displayMetrics.widthPixels
             val screenHeight = context.resources.displayMetrics.heightPixels
             // Set the wallpaper
-            Glide.with(context).asBitmap().load(BASE_URL_IMAGE+uri).into(object : CustomTarget<Bitmap?>() {
-                override fun onResourceReady(
-                    bitmap: Bitmap,
-                    transition: Transition<in Bitmap?>?,
-                ) {
-                    val scaledBitmap =
-                        Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false)
-                    setWallpaper(bitmap)
+            Glide.with(context).asBitmap().load(BASE_URL_IMAGE + uri)
+                .into(object : CustomTarget<Bitmap?>() {
+                    override fun onResourceReady(
+                        bitmap: Bitmap,
+                        transition: Transition<in Bitmap?>?,
+                    ) {
+                        val scaledBitmap =
+                            Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false)
+                        setWallpaper(bitmap)
 
-                }
+                    }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    Snackbar.make(name, "Failed to Apply Wallpaper", Snackbar.LENGTH_SHORT).show()
-                }
-            })
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        Snackbar.make(name, "Failed to Apply Wallpaper", Snackbar.LENGTH_SHORT)
+                            .show()
+                    }
+                })
 
 
         } catch (e: IOException) {
@@ -97,10 +102,9 @@ public class MyWallpaperManager(
 
     }
 
-    private val PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1
-
-    fun saveBitmapToStorage(fileName: String) {
-
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @Throws(IOException::class)
+    fun saveBitmapToStorage(displayName: String) {
         if (Build.VERSION.SDK_INT <= 29 && ContextCompat.checkSelfPermission(
                 context, Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
@@ -113,35 +117,113 @@ public class MyWallpaperManager(
             return
         }
         Snackbar.make(name, "Downloading...", Snackbar.LENGTH_SHORT).show()
-        Glide.with(context).asBitmap().load(uri).into(object : CustomTarget<Bitmap?>() {
-            override fun onResourceReady(
-                resource: Bitmap,
-                transition: Transition<in Bitmap?>?,
-            ) {
-                val picturesDir =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                if (picturesDir != null) {
-                    val imageFile = File(picturesDir, fileName)
-                    try {
-                        FileOutputStream(imageFile).use { fos ->
-                            resource.compress(Bitmap.CompressFormat.JPEG, 10, fos)
-                            Snackbar.make(name, "Downloading Complete", Snackbar.LENGTH_SHORT)
-                                .show()
+        Glide.with(context).asBitmap().load(BASE_URL_IMAGE + uri)
+            .into(object : CustomTarget<Bitmap?>() {
+                override fun onResourceReady(
+                    bitmap: Bitmap,
+                    transition: Transition<in Bitmap?>?,
+                ) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val values = ContentValues().apply {
+                            put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+                            put(MediaStore.MediaColumns.MIME_TYPE, ".jpg")
+                            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
                         }
-                        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-                        mediaScanIntent.data = Uri.fromFile(imageFile)
-                        context.sendBroadcast(mediaScanIntent)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
+
+                        val resolver = context.contentResolver
+                        var uri: Uri? = null
+
+                        try {
+                            uri = resolver.insert(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                values
+                            )
+                                ?: throw IOException("Failed to create new MediaStore record.")
+
+                            resolver.openOutputStream(uri)?.use {
+                                if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 20, it))
+                                    throw IOException("Failed to save bitmap.")
+                            } ?: throw IOException("Failed to open output stream.")
+
+                        } catch (e: IOException) {
+                            uri?.let { orphanUri ->
+                                resolver.delete(orphanUri, null, null)
+                            }
+                            throw e
+                        }
+                    } else {
+                        val picturesDir =
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                        if (picturesDir != null) {
+                            val imageFile = File(picturesDir, displayName)
+                            try {
+                                FileOutputStream(imageFile).use { fos ->
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 20, fos)
+                                }
+                                val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+                                mediaScanIntent.data = Uri.fromFile(imageFile)
+                                context.sendBroadcast(mediaScanIntent)
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+                        }
                     }
                 }
-            }
 
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // Handle the placeholder if needed
-            }
-        })
-
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // Handle the placeholder if needed
+                }
+            })
+        Snackbar.make(name, "Downloading Complete", Snackbar.LENGTH_SHORT).show()
 
     }
+
+
+    private val PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1
+
+//    fun saveBitmapToStorage(fileName: String) {
+//
+//        if (Build.VERSION.SDK_INT <= 29 && ContextCompat.checkSelfPermission(
+//                context, Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            ActivityCompat.requestPermissions(
+//                context as Activity,
+//                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE
+//            )
+//            return
+//        }
+//        Snackbar.make(name, "Downloading...", Snackbar.LENGTH_SHORT).show()
+//        Glide.with(context).asBitmap().load(uri).into(object : CustomTarget<Bitmap?>() {
+//            override fun onResourceReady(
+//                resource: Bitmap,
+//                transition: Transition<in Bitmap?>?,
+//            ) {
+//                val picturesDir =
+//                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+//                if (picturesDir != null) {
+//                    val imageFile = File(picturesDir, fileName)
+//                    try {
+//                        FileOutputStream(imageFile).use { fos ->
+//                            resource.compress(Bitmap.CompressFormat.JPEG, 10, fos)
+//                            Snackbar.make(name, "Downloading Complete", Snackbar.LENGTH_SHORT)
+//                                .show()
+//                        }
+//                        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+//                        mediaScanIntent.data = Uri.fromFile(imageFile)
+//                        context.sendBroadcast(mediaScanIntent)
+//                    } catch (e: IOException) {
+//                        e.printStackTrace()
+//                    }
+//                }
+//            }
+//
+//            override fun onLoadCleared(placeholder: Drawable?) {
+//                // Handle the placeholder if needed
+//            }
+//        })
+//
+//
+//    }
 }

@@ -1,6 +1,7 @@
 package me.meenagopal24.wallpapers.UI
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.airbnb.lottie.LottieAnimationView
-import com.facebook.shimmer.ShimmerFrameLayout
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.databases.AllWallpaperListHelper
+import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
@@ -26,6 +26,7 @@ import me.meenagopal24.wallpapers.utils.Functions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 class HomeFragment : Fragment(),
     ChangeInterface {
     lateinit var list: ArrayList<wallpapers.item>
@@ -33,6 +34,7 @@ class HomeFragment : Fragment(),
     lateinit var swipeRefresh: SwipeRefreshLayout
     lateinit var when_favourite: LinearLayout
     lateinit var progress: ProgressBar
+    private var scrollPosition = 0
 
 
     override fun onCreateView(
@@ -51,19 +53,30 @@ class HomeFragment : Fragment(),
         view.findViewById<Button>(R.id.refresh).setOnClickListener { getWallpapers() }
         if (AllWallpaperListHelper(requireContext()).getList().isNotEmpty()) {
             setAdapter(AllWallpaperListHelper(requireContext()).getList())
-        }else {
-            getWallpapers()
         }
-
+//        wallpapersRecycler.addOnScrollListener(onScrollListener())
+        getWallpapers()
         return view;
     }
 
     private fun getWallpapers() {
+
         val call: Call<wallpapers> = RetrofitClient.getInstance().api.wallpaper
         call.enqueue(object : Callback<wallpapers> {
             override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
-                setAdapter(response.body()?.list)
-                response.body()?.let { AllWallpaperListHelper(requireContext()).saveList(it.list) }
+                try {
+                    if (swipeRefresh.isRefreshing || AllWallpaperListHelper(requireContext()).getList()
+                            .isEmpty()
+                    ) {
+                        setAdapter(response.body()?.list)
+                        swipeRefresh.isRefreshing = false
+                    }
+                    requireActivity().runOnUiThread {
+                        response.body()
+                            ?.let { AllWallpaperListHelper(requireContext()).saveList(it.list) }
+                    }
+                } catch (_: java.lang.Exception) {
+                }
             }
 
             override fun onFailure(call: Call<wallpapers>, t: Throwable) {
@@ -76,11 +89,12 @@ class HomeFragment : Fragment(),
         CategoryFragment
     }
 
-    private fun setAdapter(list: ArrayList<wallpapers.item>?) {
+    private fun setAdapter(list: java.util.ArrayList<wallpapers.item>?) {
         progress.visibility = View.GONE
         if (list != null && list.size != 0) {
             this.list = list as ArrayList<wallpapers.item>
-            wallpapersRecycler.adapter = list.let { StaggeredAdapter(it, this@HomeFragment) }
+            wallpapersRecycler.adapter = StaggeredAdapter(list, this@HomeFragment)
+            wallpapersRecycler.scrollToPosition(scrollPosition)
             swipeRefresh.isRefreshing = false
             when_favourite.visibility = View.INVISIBLE
 
@@ -104,5 +118,17 @@ class HomeFragment : Fragment(),
     }
 
     override fun changeFragment(title: String?, category: String?) {}
+
+    private fun onScrollListener(): RecyclerView.OnScrollListener {
+        val onScrollListener: RecyclerView.OnScrollListener =
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager?
+                    scrollPosition = layoutManager!!.findFirstVisibleItemPosition()
+                }
+            }
+        return onScrollListener
+    }
 
 }

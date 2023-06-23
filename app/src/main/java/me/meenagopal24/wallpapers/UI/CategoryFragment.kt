@@ -44,21 +44,30 @@ class CategoryFragment : Fragment(),
                 CategoryListHelper(requireContext()).getList(),
                 this@CategoryFragment
             )
-        } else getCategories()
+        }
+        getCategories()
         return view
     }
+
     private fun getCategories() {
         val call: Call<wallpapers> = RetrofitClient.getInstance().api.categories
         call.enqueue(object : Callback<wallpapers> {
             override fun onFailure(call: Call<wallpapers>, t: Throwable) {
                 Toast.makeText(requireContext(), "something went", Toast.LENGTH_SHORT).show()
             }
+
             override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
-                catRecycler.adapter =
-                    response.body()?.list?.let {
-                        CategoryListHelper(requireContext()).saveList(response.body()?.list as ArrayList<wallpapers.item>)
-                        CategoryAdapter(it, this@CategoryFragment)
+                requireActivity().runOnUiThread {
+                    CategoryListHelper(requireContext()).saveList(response.body()?.list as ArrayList<wallpapers.item>)
+                    if (CategoryListHelper(requireContext()).getList().isEmpty()) {
+                        catRecycler.adapter = response.body()?.list?.let {
+                            CategoryAdapter(
+                                it,
+                                this@CategoryFragment
+                            )
+                        }
                     }
+                }
             }
         })
     }
@@ -71,7 +80,7 @@ class CategoryFragment : Fragment(),
             }
     }
 
-    override fun changeFragment(position: Int) { }
+    override fun changeFragment(position: Int) {}
     override fun changeFragment(title: String, category: String) {
         requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(Constants.PREVIEW_FRAGMENT)

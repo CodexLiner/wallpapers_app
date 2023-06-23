@@ -72,8 +72,8 @@ class PreviewFragment() :
             view.findViewById<LinearLayout>(R.id.text_area_for_favourite).visibility =
                 View.INVISIBLE
         }
-        name = view.findViewById<TextView>(R.id.wallpaper_text)
-        imageView = view.findViewById<ImageView>(R.id.add_to_fav)
+        name = view.findViewById(R.id.wallpaper_text)
+        imageView = view.findViewById(R.id.add_to_fav)
         initializeRecyclerView(preList, position)
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(wallpapers)
@@ -86,8 +86,9 @@ class PreviewFragment() :
         }
         view.findViewById<Button>(R.id.download_wallpaper).setOnClickListener {
             preList[position].let { it1 ->
+                val uri = it1.category+"/"+it1.image
                 MyWallpaperManager(
-                    uri = it1.image,
+                    uri = uri,
                     context = requireContext(),
                     flag = 0,
                     close = this,
