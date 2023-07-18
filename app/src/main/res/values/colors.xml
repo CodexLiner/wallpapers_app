@@ -7,11 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
 <!--    <color name="colorMain">#8BC34A</color>-->
-    <color name="colorMain">#88c63e</color>
     <color name="white">#FFFFFFFF</color>
     <color name="limeWhite">#F4F7FF</color>
     <color name="transparent">#00ffffff</color>
     <color name="color_main_light">#C4E1CF</color>
+    <color name="colorMain">#88c63e</color>
 
     <color name="background">#dddddd</color>
 </resources>

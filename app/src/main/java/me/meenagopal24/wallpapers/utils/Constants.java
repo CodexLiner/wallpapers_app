@@ -24,4 +24,9 @@ public class Constants {
     public static final String PREVIEW_FRAGMENT = PreviewFragment.class.getName();
     public static final String CONNECTIVITY_FRAGMENT = ConnectivityFragment.class.getName();
     public static Parcelable recyclerState = null;
+    public static final int VIEW_TYPE_CONTENT = 0;
+    public static final int VIEW_TYPE_AD = 1;
+    public static final String NATIVE_AD_ID = "ca-app-pub-3940256099942544/2247696110";
+//    public static final String NATIVE_AD_ID = "ca-app-pub-9009243170660806/7231224074"; // production
+
 }

@@ -1,6 +1,7 @@
 package me.meenagopal24.wallpapers.UI
 
 import android.app.Dialog
+import android.app.Fragment
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.*
@@ -8,7 +9,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +32,7 @@ public const val OPEN_POSITION = "openPosition"
 public const val HIDE_TEXT = "hide_text"
 
 class PreviewFragment() :
-    Fragment(), WallpaperResponse {
+    androidx.fragment.app.Fragment(), WallpaperResponse {
     lateinit var preList: ArrayList<wallpapers.item>
     private var openPosition: Int = -1
     private var hideStatus: Boolean = false

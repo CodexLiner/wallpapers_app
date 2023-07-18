@@ -2,4 +2,6 @@
 <resources>
     <dimen name="icon_prev_margin">12dp</dimen>
     <dimen name="icon_prev_line">20dp</dimen>
+    <dimen name="ad_width">320dp</dimen>
+    <dimen name="ad_height">200dp</dimen>
 </resources>

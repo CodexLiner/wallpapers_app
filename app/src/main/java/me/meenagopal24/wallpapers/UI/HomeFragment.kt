@@ -98,6 +98,7 @@ class HomeFragment : Fragment(),
             swipeRefresh.isRefreshing = false
             when_favourite.visibility = View.INVISIBLE
 
+
         } else {
             when_favourite.visibility = View.VISIBLE
         }
