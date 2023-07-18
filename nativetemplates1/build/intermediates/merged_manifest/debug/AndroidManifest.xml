@@ -5,6 +5,9 @@
     <uses-sdk android:minSdkVersion="16" />
 
     <application android:supportsRtl="true" >
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

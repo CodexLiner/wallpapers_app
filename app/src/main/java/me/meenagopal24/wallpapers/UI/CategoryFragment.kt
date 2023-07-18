@@ -1,7 +1,6 @@
 package me.meenagopal24.wallpapers.UI
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.CategoryAdapter
 import me.meenagopal24.wallpapers.databases.CategoryListHelper
-import me.meenagopal24.wallpapers.databases.WallpaperListHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
@@ -86,4 +84,5 @@ class CategoryFragment : Fragment(),
             .addToBackStack(Constants.PREVIEW_FRAGMENT)
             .add(R.id.main_layout, SelectedCategoryFragment.newInstance(title, category)).commit()
     }
+
 }

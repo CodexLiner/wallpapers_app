@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/gnt_no_size"
+                android:padding="0dp"
                 android:layout_marginTop="@dimen/gnt_no_margin"
                 app:layout_constraintBottom_toTopOf="@id/middle"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -203,6 +204,7 @@
                     android:layout_gravity="bottom"
                     android:layout_margin="@dimen/gnt_no_size"
                     android:layout_marginBottom="@dimen/gnt_small_margin"
+                    android:fontFamily="@font/open_sans"
                     android:gravity="top|start"
                     android:paddingStart="@dimen/gnt_default_margin"
                     android:paddingLeft="@dimen/gnt_default_margin"
@@ -213,6 +215,7 @@
                     app:layout_constraintTop_toBottomOf="@id/middle" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:visibility="gone"
                     android:id="@+id/cta"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"

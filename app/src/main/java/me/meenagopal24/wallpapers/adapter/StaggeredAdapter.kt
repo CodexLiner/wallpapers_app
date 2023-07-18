@@ -98,9 +98,7 @@ package me.meenagopal24.wallpapers.adapter
 //}
 
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -131,7 +129,7 @@ class StaggeredAdapter(
 
     private val VIEW_TYPE_CONTENT = 0
     private val VIEW_TYPE_AD = 1
-    private val AD_POSITION_INTERVAL = 4
+    private val AD_POSITION_INTERVAL = 9
 
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sImage: ImageView = itemView.findViewById(R.id.staggered_image)
@@ -151,15 +149,25 @@ class StaggeredAdapter(
                     .inflate(R.layout.staggered_single, parent, false)
             )
         } else {
-            AdViewHolder(
+//            AdViewHolder(
+//                LayoutInflater.from(parent.context)
+//                    .inflate(R.layout.ad_unified_native, parent, false)
+//            )
+            val adHolder = AdViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.ad_unified_native, parent, false)
             )
+
+            // Set the ad layout visibility based on the isAdLoaded flag
+            adHolder.add_layout.visibility = if (adLoaded) View.VISIBLE else View.VISIBLE
+
+            adHolder
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position != 0 && position % AD_POSITION_INTERVAL == 0) {
+        if (position == 0) return VIEW_TYPE_CONTENT
+        return if (position == 4 || position % AD_POSITION_INTERVAL == 0) {
             VIEW_TYPE_AD
         } else {
             VIEW_TYPE_CONTENT
@@ -170,7 +178,7 @@ class StaggeredAdapter(
         return list.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         if (getItemViewType(position) == VIEW_TYPE_CONTENT) {
             // Bind your regular content data to the content item view holder
             val contentHolder = holder as Holder
@@ -185,43 +193,102 @@ class StaggeredAdapter(
                 change.changeFragment(position)
             }
         } else {
-            // Here, you'll load and bind the native ad to the native ad item view holder
+//            // Here, you'll load and bind the native ad to the native ad item view holder
+//            val adHolder = holder as AdViewHolder
+//            loadNativeAd(adHolder.adView, holder.itemView, position)
+//            if (adHolder.adLoaded) {
+//                adHolder.add_layout.visibility = View.VISIBLE
+//            } else {
+////             adHolder.add_layout.visibility = View.GONE
+//            }
+
+            //here new one
             val adHolder = holder as AdViewHolder
-            loadNativeAd(adHolder.adView, holder.itemView, position)
-            if (adHolder.adLoaded) {
-                adHolder.add_layout.visibility = View.VISIBLE
+            if (ad != null) {
+                bindNativeAd(adHolder.adView, ad, holder.itemView)
             } else {
-//                adHolder.add_layout.visibility = View.GONE
+                loadNativeAd(adHolder.adView, adHolder.add_layout, holder.itemView)
             }
+
         }
+
+    private fun changeParams(adHolder: CardView) {
+        adHolder.setPadding(0, 0, 0, 0)
+        val layoutParams = adHolder.layoutParams as ViewGroup.MarginLayoutParams
+
+        layoutParams.setMargins(0, 0, 0, 0)
+        adHolder.layoutParams = layoutParams
+
+        adHolder.layoutParams.height = 0
+        adHolder.requestLayout()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun loadNativeAd(adView: NativeAdView, itemView: View, position: Int) {
-//        if (adLoaded && ad != null) {
-//            return
-//        }
-//        val adSize = AdSize(300, AdSize.BANNER.height)
-//        val builder = AdLoader.Builder(adView.context, "ca-app-pub-3940256099942544/2247696110")
-//        val adLoader = builder.forNativeAd { nativeAd ->
-//            ad = nativeAd
-//            adLoaded = true
-//            notifyDataSetChanged() // Notify the adapter once the ad is loaded
-//        }.build()
-        val color = ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white))
-        val adLoader: AdLoader = AdLoader.Builder(itemView.context, NATIVE_AD_ID)
+    private fun loadNativeAd(adView: NativeAdView, adLayout: CardView, itemView: View) {
+        val adLoader: AdLoader = AdLoader.Builder(adView.context, NATIVE_AD_ID)
             .forNativeAd { nativeAd ->
-                val styles: NativeTemplateStyle =
-                    NativeTemplateStyle.Builder().withMainBackgroundColor(color).build()
-                val template: TemplateView = itemView.findViewById(R.id.my_template)
-                template.setStyles(styles)
-                template.setNativeAd(nativeAd)
-            }.withAdListener(object : AdListener() {
+                ad = nativeAd
+                bindNativeAd(adView, ad, itemView)
+                adLoaded = true
+
+                // Notify the adapter that data has changed
+                notifyDataSetChanged()
+            }
+            .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    ad = null
+                    changeParams(adLayout)
+                    adLoaded = false
+
+                    // Notify the adapter that data has changed
                     notifyDataSetChanged()
                 }
             })
             .build()
+
         adLoader.loadAd(AdRequest.Builder().build())
     }
+
+    private fun bindNativeAd(adView: NativeAdView, ad: NativeAd?, itemView: View) {
+        if (ad != null) {
+            val color = ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white))
+            val styles: NativeTemplateStyle =
+                NativeTemplateStyle
+                    .Builder()
+                    .withMainBackgroundColor(color)
+                    .build()
+            val template: TemplateView = itemView.findViewById(R.id.my_template)
+            template.setStyles(styles)
+            template.setNativeAd(ad)
+        }
+    }
+
+
+//    @SuppressLint("NotifyDataSetChanged")
+//    private fun loadNativeAd(adView: NativeAdView, itemView: View, position: Int) {
+////        if (adLoaded && ad != null) {
+////            return
+////        }
+////        val adSize = AdSize(300, AdSize.BANNER.height)
+////        val builder = AdLoader.Builder(adView.context, "ca-app-pub-3940256099942544/2247696110")
+////        val adLoader = builder.forNativeAd { nativeAd ->
+////            ad = nativeAd
+////            adLoaded = true
+////            notifyDataSetChanged() // Notify the adapter once the ad is loaded
+////        }.build()
+//        val color = ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white))
+//        val adLoader: AdLoader = AdLoader.Builder(itemView.context, NATIVE_AD_ID)
+//            .forNativeAd { nativeAd ->
+//                val styles: NativeTemplateStyle =
+//                    NativeTemplateStyle.Builder().withMainBackgroundColor(color).build()
+//                val template: TemplateView = itemView.findViewById(R.id.my_template)
+//                template.setStyles(styles)
+//                template.setNativeAd(nativeAd)
+//            }.withAdListener(object : AdListener() {
+//                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+//                    notifyDataSetChanged()
+//                }
+//            })
+//            .build()
+//        adLoader.loadAd(AdRequest.Builder().build())
+//    }
 }

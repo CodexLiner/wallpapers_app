@@ -15,8 +15,6 @@ import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
-import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
-import me.meenagopal24.wallpapers.utils.Functions
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"

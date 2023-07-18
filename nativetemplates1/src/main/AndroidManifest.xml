@@ -2,6 +2,9 @@
   package="com.google.android.ads.nativetemplates">
   <application android:supportsRtl="true">
 
+      <meta-data
+          android:name="preloaded_fonts"
+          android:resource="@array/preloaded_fonts" />
   </application>
 
 

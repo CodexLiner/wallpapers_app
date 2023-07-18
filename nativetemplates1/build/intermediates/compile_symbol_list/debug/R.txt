@@ -1,3 +1,7 @@
+int array com_google_android_gms_fonts_certs 0x0
+int array com_google_android_gms_fonts_certs_dev 0x0
+int array com_google_android_gms_fonts_certs_prod 0x0
+int array preloaded_fonts 0x0
 int attr gnt_template_type 0x0
 int color colorMain 0x0
 int color color_main_light 0x0
@@ -31,6 +35,7 @@ int dimen gnt_text_size_large 0x0
 int dimen gnt_text_size_small 0x0
 int drawable gnt_outline_shape 0x0
 int drawable gnt_rounded_corners_shape 0x0
+int font open_sans 0x0
 int id ad_notification_view 0x0
 int id background 0x0
 int id body 0x0

@@ -1,7 +1,6 @@
 package me.meenagopal24.wallpapers.UI
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +16,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.databases.AllWallpaperListHelper
-import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
 import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
+import me.meenagopal24.wallpapers.utils.Constants.VIEW_TYPE_AD
 import me.meenagopal24.wallpapers.utils.Functions
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,6 +45,7 @@ class HomeFragment : Fragment(),
         wallpapersRecycler = view.findViewById(R.id.staggered_recycler)
         when_favourite = view.findViewById(R.id.when_favourite)
         progress = view.findViewById(R.id.progress)
+
         wallpapersRecycler.layoutManager =
             GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
         swipeRefresh = view.findViewById(R.id.swipeRefresh)
@@ -98,10 +98,22 @@ class HomeFragment : Fragment(),
             swipeRefresh.isRefreshing = false
             when_favourite.visibility = View.INVISIBLE
 
-
         } else {
             when_favourite.visibility = View.VISIBLE
         }
+
+        // TODO: change this code for span count adjustment
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2) // Use 2 for the span count
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (wallpapersRecycler.adapter?.getItemViewType(position) == VIEW_TYPE_AD) {
+                    2 // Span size for ad layout (2 columns)
+                } else {
+                    1 // Span size for content layout (1 column)
+                }
+            }
+        }
+        wallpapersRecycler.layoutManager = gridLayoutManager
     }
 
     companion object {
