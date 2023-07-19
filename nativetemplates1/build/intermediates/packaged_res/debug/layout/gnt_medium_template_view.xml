@@ -11,6 +11,7 @@
 
         <FrameLayout
             android:id="@+id/background"
+            android:background="@drawable/img"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_centerInParent="true"
@@ -111,7 +112,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"></TextView>
+                                app:layout_constraintTop_toTopOf="parent" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -140,7 +141,7 @@
                                 android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"></TextView>
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <RatingBar
                                 android:id="@+id/rating_bar"
@@ -180,7 +181,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/ad_notification_view"
-                                app:layout_constraintTop_toTopOf="parent"></TextView>
+                                app:layout_constraintTop_toTopOf="parent" />
 
                         </LinearLayout>
 
@@ -215,7 +216,7 @@
                     app:layout_constraintTop_toBottomOf="@id/middle" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/cta"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"

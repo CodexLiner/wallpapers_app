@@ -6,8 +6,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import me.meenagopal24.wallpapers.UI.HomeFragment
 import me.meenagopal24.wallpapers.services.InternetConnectivityReceiver
@@ -18,15 +22,16 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNav: BottomNavigationView
+    private var mInterstitialAd: InterstitialAd? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         MobileAds.initialize(this) {}
+
         // Set test device ID to receive test ads on this device
-        // Set test device ID to receive test ads on this device
-        val testDeviceIds = listOf("F5408CE04C21ED20854910B097BA25C9")
-        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
-        MobileAds.setRequestConfiguration(configuration)
+//        val testDeviceIds = listOf("F5408CE04C21ED20854910B097BA25C9")
+//        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+//        MobileAds.setRequestConfiguration(configuration)
 
         val connectivityReceiver = InternetConnectivityReceiver(supportFragmentManager, this)
         registerReceiver(
