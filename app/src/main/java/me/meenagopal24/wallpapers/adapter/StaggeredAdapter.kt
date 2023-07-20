@@ -100,20 +100,21 @@ package me.meenagopal24.wallpapers.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.ads.nativetemplates.NativeTemplateStyle
-import com.google.android.ads.nativetemplates.TemplateView
 import com.google.android.gms.ads.*
+import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
@@ -126,8 +127,8 @@ import me.meenagopal24.wallpapers.utils.Constants.*
 class StaggeredAdapter(
     private val list: MutableList<wallpapers.item>,
     private val change: ChangeInterface,
+) :
 
-    ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_CONTENT = 0
@@ -186,7 +187,6 @@ class StaggeredAdapter(
                 change.changeFragment(position)
             }
         } else {
-
             val adHolder = holder as AdViewHolder
             if (loadedAds.containsKey(position)) {
                 val ad = loadedAds[position]
@@ -194,7 +194,6 @@ class StaggeredAdapter(
             } else {
                 loadNativeAd(adHolder.adView, adHolder.add_layout, holder.itemView, position)
             }
-
         }
 
     private fun loadNativeAd(
@@ -204,20 +203,19 @@ class StaggeredAdapter(
         position: Int,
     ) {
         val adOptions = NativeAdOptions.Builder()
-            .setMediaAspectRatio(MediaAspectRatio.PORTRAIT)
+            .setMediaAspectRatio(MediaAspectRatio.SQUARE)
             .build()
         val adLoader: AdLoader =
-            AdLoader.Builder(itemView.context, NATIVE_AD_ID).withNativeAdOptions(adOptions)
+            AdLoader.Builder(itemView.context, NATIVE_AD_ID)
+                .withNativeAdOptions(adOptions)
                 .forNativeAd { nativeAd ->
                     bindNativeAd(nativeAd, itemView)
                     loadedAds[position] = nativeAd
-//                    changeParams(adLayout, h = 300, 10)
                 }
                 .withAdListener(object : AdListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         // Handle ad loading failure if needed
-
                         changeParams(adLayout, h = 0, m = 0)
                         notifyDataSetChanged()
                     }
@@ -246,17 +244,41 @@ class StaggeredAdapter(
     }
 
 
+    @SuppressLint("CutPasteId")
     private fun bindNativeAd(ad: NativeAd?, itemView: View) {
         if (ad != null) {
-            val color = ColorDrawable(ContextCompat.getColor(itemView.context, R.color.white))
-            val styles: NativeTemplateStyle =
-                NativeTemplateStyle
-                    .Builder()
-                    .withMainBackgroundColor(color)
-                    .build()
-            val template: TemplateView = itemView.findViewById(R.id.my_template)
-            template.setStyles(styles)
-            template.setNativeAd(ad)
+            // Find the NativeAdView and set visibility to VISIBLE
+            val adView = itemView.findViewById<NativeAdView>(R.id.ad_unified_native)
+            adView.visibility = View.VISIBLE
+
+            // Set up the NativeAdView with the loaded NativeAd
+            adView.headlineView = itemView.findViewById(R.id.ad_headline)
+            adView.bodyView = itemView.findViewById(R.id.ad_body)
+            adView.callToActionView = itemView.findViewById(R.id.ad_call_to_action)
+            adView.iconView = itemView.findViewById(R.id.ad_icon)
+            adView.mediaView = itemView.findViewById(R.id.ad_media)
+
+            // Populate the NativeAdView with the ad data
+            (itemView.findViewById<TextView>(R.id.ad_headline)).text = ad.headline
+            (itemView.findViewById<TextView>(R.id.ad_body)).text = ad.body
+            (itemView.findViewById<Button>(R.id.ad_call_to_action)).text = ad.callToAction
+
+            // Load the ad icon and images into their views
+            val iconView = itemView.findViewById<ImageView>(R.id.ad_icon)
+            if (ad.icon != null) {
+                iconView.setImageDrawable(ad.icon!!.drawable)
+            }
+
+            val mediaView = itemView.findViewById<MediaView>(R.id.ad_media)
+            if (ad.mediaContent != null) {
+                mediaView.mediaContent = ad.mediaContent
+            }
+            val imageView = itemView.findViewById<ImageView>(R.id.ad_image_view)
+            if (ad.mediaContent?.mainImage != null) {
+                imageView.setImageDrawable(ad.mediaContent?.mainImage)
+            }
+            // Register the ad view for ad impression and click tracking
+            adView.setNativeAd(ad)
         }
     }
 }

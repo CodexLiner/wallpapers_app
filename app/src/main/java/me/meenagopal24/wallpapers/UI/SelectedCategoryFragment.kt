@@ -18,6 +18,7 @@ import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
 import me.meenagopal24.wallpapers.utils.Constants
+import me.meenagopal24.wallpapers.utils.Constants.VIEW_TYPE_AD
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +26,6 @@ import retrofit2.Response
 
 private const val TITLE = "param1"
 private const val CATEGORY = "param2"
-
 
 
 class SelectedCategoryFragment() : ChangeInterface,
@@ -60,11 +60,19 @@ class SelectedCategoryFragment() : ChangeInterface,
         wallpapersRecycler = view.findViewById(R.id.staggered_recycler)
         wallpapersRecycler.layoutManager =
             GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
+        // TODO: change this code for span count adjustment
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2) // Use 2 for the span count
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (wallpapersRecycler.adapter?.getItemViewType(position) == VIEW_TYPE_AD) 2 else 1
+            }
+        }
+        wallpapersRecycler.layoutManager = gridLayoutManager
         getItemsFromCategory()
     }
 
     private fun getItemsFromCategory() {
-        val when_favourite: LinearLayout? = view?.findViewById(R.id.when_favourite)
+        val whenFavourite: LinearLayout? = view?.findViewById(R.id.when_favourite)
         val call: Call<wallpapers> =
             RetrofitClient.getInstance().api.getWallpaperByCategory(category)
         call.enqueue(object : Callback<wallpapers> {
@@ -79,26 +87,23 @@ class SelectedCategoryFragment() : ChangeInterface,
                                 this@SelectedCategoryFragment
                             )
                         }
-                    when_favourite?.visibility = View.INVISIBLE
+                    whenFavourite?.visibility = View.INVISIBLE
                 } else {
-                    when_favourite?.visibility = View.VISIBLE
+                    whenFavourite?.visibility = View.VISIBLE
                 }
             }
 
             override fun onFailure(call: Call<wallpapers>, t: Throwable) {
-                when_favourite?.visibility = View.VISIBLE
+                whenFavourite?.visibility = View.VISIBLE
                 Toast.makeText(requireContext(), "something went wrong", Toast.LENGTH_SHORT).show()
             }
-
         })
     }
-
     override fun changeFragment(position: Int) {
         requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(Constants.PREVIEW_FRAGMENT)
             .add(R.id.main_layout, PreviewFragment.newInstance(list, openPosition = position))
             .commit()
-
     }
 
     override fun changeFragment(title: String?, category: String?) {
@@ -115,4 +120,5 @@ class SelectedCategoryFragment() : ChangeInterface,
                 }
             }
     }
+
 }

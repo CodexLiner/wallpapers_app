@@ -106,11 +106,7 @@ class HomeFragment : Fragment(),
         val gridLayoutManager = GridLayoutManager(requireContext(), 2) // Use 2 for the span count
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (wallpapersRecycler.adapter?.getItemViewType(position) == VIEW_TYPE_AD) {
-                    2 // Span size for ad layout (2 columns)
-                } else {
-                    1 // Span size for content layout (1 column)
-                }
+                return if (wallpapersRecycler.adapter?.getItemViewType(position) == VIEW_TYPE_AD) 2 else 1
             }
         }
         wallpapersRecycler.layoutManager = gridLayoutManager
@@ -143,5 +139,6 @@ class HomeFragment : Fragment(),
             }
         return onScrollListener
     }
+
 
 }

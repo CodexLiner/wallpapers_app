@@ -50,7 +50,8 @@ class FavouriteFragment : Fragment(), ChangeInterface {
         val recyclerView: RecyclerView = view.findViewById(R.id.favourite_recycler)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        recyclerView.adapter = StaggeredAdapter(list, this@FavouriteFragment)
+        recyclerView.adapter =
+            StaggeredAdapter(list, this@FavouriteFragment)
         if (list.isNotEmpty()) {
             view.findViewById<LinearLayout>(R.id.when_favourite).visibility = View.GONE
         }

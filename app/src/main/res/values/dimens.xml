@@ -4,4 +4,5 @@
     <dimen name="icon_prev_line">20dp</dimen>
     <dimen name="ad_width">320dp</dimen>
     <dimen name="ad_height">200dp</dimen>
+    <dimen name="_10_Dp">10dp</dimen>
 </resources>
