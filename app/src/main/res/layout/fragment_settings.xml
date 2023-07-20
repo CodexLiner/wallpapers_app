@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@color/limeWhite"
     tools:context=".UI.SettingsFragment">
 
@@ -27,9 +28,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -215,7 +216,29 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:padding="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/setting_bg"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:orientation="horizontal">
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/adView"
+                    ads:adSize="SMART_BANNER"
+                    ads:adUnitId="ca-app-pub-6831834965817563/5203417417"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </LinearLayout>
         </LinearLayout>
+
 
     </LinearLayout>
 

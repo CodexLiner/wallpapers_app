@@ -9,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.material.snackbar.Snackbar
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.utils.Constants.BASE_URL
@@ -70,6 +73,9 @@ class SettingsFragment : Fragment() {
         view.findViewById<LinearLayout>(R.id.account).setOnClickListener {
             Snackbar.make(requireContext(), view, "Something went wrong", Snackbar.LENGTH_SHORT).show()
         }
+        val adView : AdView = view.findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     companion object {

@@ -30,7 +30,6 @@ private const val CATEGORY = "param2"
 
 class SelectedCategoryFragment() : ChangeInterface,
     Fragment() {
-    // TODO: Rename and change types of parameters
     private var name: String? = null
     private var category: String? = null
     lateinit var list: ArrayList<wallpapers.item>
@@ -58,8 +57,8 @@ class SelectedCategoryFragment() : ChangeInterface,
         view.findViewById<TextView>(R.id.title_selected).text = name
         progress = view.findViewById(R.id.progress)
         wallpapersRecycler = view.findViewById(R.id.staggered_recycler)
-        wallpapersRecycler.layoutManager =
-            GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
+        wallpapersRecycler.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
+
         // TODO: change this code for span count adjustment
         val gridLayoutManager = GridLayoutManager(requireContext(), 2) // Use 2 for the span count
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

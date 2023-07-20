@@ -3,6 +3,7 @@ package me.meenagopal24.wallpapers
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNav: BottomNavigationView
     private var mInterstitialAd: InterstitialAd? = null
+    private var isHome = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -70,16 +72,21 @@ class MainActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        if (isHome)finish()
         if (checkOnTop(CONNECTIVITY_FRAGMENT)) {
             finish()
         }
-        if (checkOnTop(CATEGORY_FRAGMENT) || checkOnTop(FAVOURITE_FRAGMENT) || checkOnTop(
+        if (checkOnTop(CATEGORY_FRAGMENT)
+            || checkOnTop(FAVOURITE_FRAGMENT)
+            || checkOnTop(
                 SETTING_FRAGMENT
             )
         ) {
-            supportFragmentManager.beginTransaction().replace(
-                R.id.main_layout, supportFragmentManager.findFragmentByTag(HOME_FRAGMENT)!!
-            ).commit()
+            Log.d("TAG", "onBackPressed: ${ supportFragmentManager.getBackStackEntryAt(
+                supportFragmentManager.backStackEntryCount - 1
+            ).name}")
+            Functions(supportFragmentManager).switchFragment(HOME_FRAGMENT)
+            isHome = true
             bottomNav.selectedItemId = R.id.home_bottom
         } else {
             if (checkOnTop(PREVIEW_FRAGMENT) || checkOnTop("old_preview_fav")

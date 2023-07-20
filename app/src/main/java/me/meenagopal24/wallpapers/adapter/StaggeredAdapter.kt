@@ -1,106 +1,6 @@
 package me.meenagopal24.wallpapers.adapter
-
-//import android.app.Activity
-//import android.util.DisplayMetrics
-//import android.util.Log
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.widget.ImageView
-//import androidx.recyclerview.widget.RecyclerView
-//import com.bumptech.glide.Glide
-//import com.bumptech.glide.load.engine.DiskCacheStrategy
-//import com.google.android.gms.ads.AdRequest
-//import com.google.android.gms.ads.AdSize
-//import com.google.android.gms.ads.AdView
-//import me.meenagopal24.wallpapers.R
-//import me.meenagopal24.wallpapers.interfaces.ChangeInterface
-//import me.meenagopal24.wallpapers.models.wallpapers
-//import me.meenagopal24.wallpapers.utils.Constants.*
-
-
-//class StaggeredAdapter(
-//    private val list: MutableList<wallpapers.item>,
-//    private val change: ChangeInterface,
-//) :
-//    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-//    class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val sImage: ImageView = itemView.findViewById(R.id.staggered_image)
-//
-//    }
-//
-//    class AdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        var adView: AdView = itemView.findViewById(R.id.adView)
-//    }
-//
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-//        return if (viewType == VIEW_TYPE_CONTENT) {
-//            Holder(
-//                LayoutInflater.from(parent.context)
-//                    .inflate(R.layout.staggered_single, parent, false)
-//            )
-//        } else {
-//            AdViewHolder(
-//                LayoutInflater.from(parent.context)
-//                    .inflate(R.layout.staggered_single_ad, parent, false)
-//            )
-//        }
-//    }
-//
-//    override fun getItemViewType(position: Int): Int {
-//        return if (position != 0 && position % 4 == 0) {
-//            VIEW_TYPE_AD;
-//        } else VIEW_TYPE_CONTENT
-//    }
-//
-//    override fun getItemCount(): Int {
-//        return list.size ?: 0
-//    }
-//
-//    override fun onBindViewHolder(args: RecyclerView.ViewHolder, position: Int) {
-//        if (getItemViewType(position) == VIEW_TYPE_CONTENT) {
-//            val holder: Holder = args as Holder;
-//            Glide.with(holder.itemView.context)
-//                .load(BASE_URL_IMAGE + list[position].category.trim() + "/" + list[position].image.trim())
-//                .diskCacheStrategy(DiskCacheStrategy.DATA)
-//                .placeholder(R.drawable.grey).into(holder.sImage)
-//            holder.sImage.setOnClickListener {
-//                change.changeFragment(position)
-//            }
-//        } else {
-//            val holder: AdViewHolder = args as AdViewHolder
-//            val activity = holder.adView.context as Activity
-//            val adRequest: AdRequest = AdRequest.Builder().build()
-////            holder.adView.setAdSize(getCustomAdSize(activity))
-////            holder.adView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
-//            holder.adView.loadAd(adRequest)
-//        }
-//
-//    }
-//
-//    private fun getCustomAdSize(activity: Activity): AdSize {
-//        val widthInPixels = activity.resources.getDimensionPixelSize(R.dimen.ad_width)
-//        val heightInPixels = activity.resources.getDimensionPixelSize(R.dimen.ad_height)
-//        return AdSize(widthInPixels, heightInPixels)
-//    }
-//
-//    fun getAdaptiveBannerAdSize(activity: Activity, adView: AdView): AdSize {
-//        val displayMetrics = DisplayMetrics()
-//        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-//
-//        val adWidthPixels = adView.width.toFloat()
-//        val density = displayMetrics.density
-//        val adWidth = (adWidthPixels / density).toInt()
-//
-//        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth)
-//    }
-//}
-
-
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -108,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -192,12 +91,11 @@ class StaggeredAdapter(
                 val ad = loadedAds[position]
                 bindNativeAd(ad, holder.itemView)
             } else {
-                loadNativeAd(adHolder.adView, adHolder.add_layout, holder.itemView, position)
+                loadNativeAd(adHolder.add_layout, holder.itemView, position)
             }
         }
 
     private fun loadNativeAd(
-        adView: NativeAdView,
         adLayout: CardView,
         itemView: View,
         position: Int,
@@ -247,11 +145,9 @@ class StaggeredAdapter(
     @SuppressLint("CutPasteId")
     private fun bindNativeAd(ad: NativeAd?, itemView: View) {
         if (ad != null) {
-            // Find the NativeAdView and set visibility to VISIBLE
             val adView = itemView.findViewById<NativeAdView>(R.id.ad_unified_native)
             adView.visibility = View.VISIBLE
 
-            // Set up the NativeAdView with the loaded NativeAd
             adView.headlineView = itemView.findViewById(R.id.ad_headline)
             adView.bodyView = itemView.findViewById(R.id.ad_body)
             adView.callToActionView = itemView.findViewById(R.id.ad_call_to_action)
