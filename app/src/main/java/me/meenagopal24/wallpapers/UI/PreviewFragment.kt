@@ -224,7 +224,7 @@ class PreviewFragment() :
         progressDialog.dismiss()
         try {
             requireActivity().runOnUiThread {
-                wallpaperSuccessEvent()
+//                wallpaperSuccessEvent()
             }
         } catch (_: Exception) {
         }

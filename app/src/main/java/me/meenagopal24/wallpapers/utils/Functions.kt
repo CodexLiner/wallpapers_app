@@ -19,12 +19,14 @@ class Functions(private val m: FragmentManager) {
         val ff = constructor?.newInstance() as Fragment
 
         if (m.findFragmentByTag(fragment) != null) {
-            m.beginTransaction().replace(
-                R.id.main_layout,
-                m.findFragmentByTag(fragment)!!
+            m.beginTransaction().setCustomAnimations(
+                R.anim.slide, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out
+            ).replace(
+                R.id.main_layout, m.findFragmentByTag(fragment)!!
             ).commit()
-        } else m.beginTransaction().addToBackStack(fragment)
-            .replace(R.id.main_layout, ff, fragment).commit()
+        } else m.beginTransaction()
+            .setCustomAnimations(R.anim.slide, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+            .addToBackStack(fragment).replace(R.id.main_layout, ff, fragment).commit()
     }
 
     companion object {
@@ -37,6 +39,7 @@ class Functions(private val m: FragmentManager) {
                 intent.launchUrl(context, Uri.parse(url))
             }
         }
+
         public fun windowTrans(activity: Activity, b: Boolean) {
             val window: Window = activity.window
             if (b) {

@@ -40,7 +40,6 @@ class StaggeredAdapter(
     }
 
     class AdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val adView: NativeAdView = itemView.findViewById(R.id.ad_unified_native)
         val add_layout: CardView = itemView.findViewById(R.id.main_ad_layout)
     }
 

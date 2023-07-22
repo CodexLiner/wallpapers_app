@@ -25,6 +25,7 @@
             android:animateLayoutChanges="false"
             android:textAlignment="viewStart"
             app:itemIconSize="20dp"
+            app:labelVisibilityMode="unlabeled"
             app:itemRippleColor="@color/white"
             app:itemBackground="@android:color/transparent"
             android:layout_height="match_parent"
