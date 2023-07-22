@@ -1,5 +1,6 @@
 package me.meenagopal24.wallpapers
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
@@ -16,6 +17,14 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import me.meenagopal24.wallpapers.UI.HomeFragment
 import me.meenagopal24.wallpapers.services.InternetConnectivityReceiver
 import me.meenagopal24.wallpapers.utils.Constants.*
@@ -27,11 +36,15 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_POST_NOTIFICATIONS = 1
     lateinit var bottomNav: BottomNavigationView
     private var isHome = false
+    lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 17326
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         MobileAds.initialize(this) {}
         checkNotificationPermission();
+        appUpdateManager = AppUpdateManagerFactory.create(applicationContext);
+        checkForUpdates()
         val connectivityReceiver = InternetConnectivityReceiver(supportFragmentManager, this)
         registerReceiver(
             connectivityReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -40,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             .setCustomAnimations(R.anim.slide, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
             .disallowAddToBackStack()
             .add(R.id.main_layout, HomeFragment(), HOME_FRAGMENT).commit()
+
 
 
         bottomNav = findViewById(R.id.bottom_nav_bar)
@@ -71,6 +85,34 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun checkForUpdates() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+            ) {
+               try {
+                   appUpdateManager.startUpdateFlowForResult(
+                       appUpdateInfo,
+                       AppUpdateType.FLEXIBLE,
+                       this@MainActivity,
+                       MY_REQUEST_CODE
+                   )
+               }catch (e:Exception){
+                   Log.d("TAG", "onActivityResult E: $e ")
+               }
+            }
+        }
+        appUpdateManager.registerListener(listener)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MY_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) { }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -105,6 +147,40 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private val listener = InstallStateUpdatedListener { state ->
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            popupSnackbarForCompleteUpdate()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        appUpdateManager
+            .appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackbarForCompleteUpdate()
+                }
+            }
+    }
+
+    fun popupSnackbarForCompleteUpdate() {
+        Snackbar.make(
+            findViewById(R.id.main_layout),
+            "An update has just been downloaded.",
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setAction("RESTART") { appUpdateManager.completeUpdate() }
+            setActionTextColor(resources.getColor(R.color.colorMain))
+            show()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appUpdateManager.unregisterListener(listener)
     }
 
     @Deprecated("Deprecated in Java")
