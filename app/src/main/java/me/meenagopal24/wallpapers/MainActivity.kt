@@ -30,6 +30,7 @@ import me.meenagopal24.wallpapers.services.InternetConnectivityReceiver
 import me.meenagopal24.wallpapers.utils.Constants.*
 import me.meenagopal24.wallpapers.utils.Functions
 import java.util.*
+import android.net.Uri
 
 
 class MainActivity : AppCompatActivity() {

@@ -5,7 +5,7 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -40,15 +40,16 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true">
             <intent-filter android:autoVerify="true">
+
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="meenagopal24.me"
-                    android:pathPrefix="/demo"
-                    android:scheme="https" />
+                    android:scheme="https"
+                    android:host="me.meenagopal24.me"
+                    android:pathPrefix="/sharing" />
             </intent-filter>
         </activity>
 
