@@ -3,7 +3,10 @@ package me.meenagopal24.wallpapers.utils
 import android.app.Activity
 import androidx.browser.customtabs.CustomTabsIntent.Builder;
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.browser.customtabs.CustomTabsIntent
@@ -43,19 +46,40 @@ class Functions(private val m: FragmentManager) {
         public fun windowTrans(activity: Activity, b: Boolean) {
             val window: Window = activity.window
             if (b) {
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                )
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    window.setDecorFitsSystemWindows(false)
+                    window.statusBarColor = Color.TRANSPARENT
+                } else {
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    )
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+                    )
+                    activity.window.apply {
+                        clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                        addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        statusBarColor = Color.TRANSPARENT
+                    }
+                }
             } else {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    window.setDecorFitsSystemWindows(true)
+                    window.statusBarColor = Color.parseColor("#F4F7FF")
+                } else {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
 //                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUND
+                    activity.window.apply {
+                        decorView.systemUiVisibility =
+                            View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        statusBarColor = Color.parseColor("#F4F7FF")
+                    }
+                }
             }
         }
 

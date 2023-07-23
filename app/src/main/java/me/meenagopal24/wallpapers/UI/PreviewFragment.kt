@@ -59,6 +59,7 @@ class PreviewFragment() :
     ): View {
         Functions.windowTrans(requireActivity(), true)
         (requireActivity() as MainActivity).bottomModify(false)
+
         return inflater.inflate(R.layout.fragment_preview, container, false)
     }
 

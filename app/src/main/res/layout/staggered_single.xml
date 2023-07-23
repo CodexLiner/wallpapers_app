@@ -10,7 +10,7 @@
     <ImageView
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/grey"
-        android:scaleType="matrix"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/staggered_image"/>
