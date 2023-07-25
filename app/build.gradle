@@ -21,8 +21,8 @@ android {
         applicationId "me.meenagopal24.wallpapers"
         minSdk 24
         targetSdk 33
-        versionCode 15
-        versionName "1.2.2"
+        versionCode 16
+        versionName "1.2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,6 +38,8 @@ android {
     }
     buildFeatures {
 //        compose = true
+        dataBinding true
+        viewBinding true
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -45,7 +47,13 @@ android {
 }
 
 dependencies {
+    //Navigation Components
+
+    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
     //admob
+    implementation 'com.android.databinding:viewbinding:4.0.1'
+
     implementation "androidx.activity:activity:1.4.0"
     implementation "androidx.fragment:fragment:1.4.0"
     implementation 'com.google.android.gms:play-services-ads:22.2.0'

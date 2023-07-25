@@ -17,7 +17,7 @@ public class wallpapers {
         String image;
         @NotNull
         String uuid;
-        String thumbnail, category ;
+        String thumbnail, category;
 
         public String getThumbnail() {
             return thumbnail;
@@ -61,6 +61,9 @@ public class wallpapers {
         protected item(Parcel in) {
             name = in.readString();
             image = in.readString();
+            uuid = in.readString();
+            thumbnail = in.readString();
+            category = in.readString();
         }
 
         public static final Creator<item> CREATOR = new Creator<item>() {
@@ -92,7 +95,6 @@ public class wallpapers {
         }
 
 
-
         @Override
         public int describeContents() {
             return 0;
@@ -102,8 +104,23 @@ public class wallpapers {
         public void writeToParcel(@NonNull Parcel parcel, int i) {
             parcel.writeString(name);
             parcel.writeString(image);
+            parcel.writeString(uuid);
+            parcel.writeString(thumbnail);
+            parcel.writeString(category);
+        }
+
+        @Override
+        public String toString() {
+            return "item{" +
+                    "name='" + name + '\'' +
+                    ", image='" + image + '\'' +
+                    ", uuid='" + uuid + '\'' +
+                    ", thumbnail='" + thumbnail + '\'' +
+                    ", category='" + category + '\'' +
+                    '}';
         }
     }
+
     @SerializedName("result")
     ArrayList<item> list;
 

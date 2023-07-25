@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/home_bottom"
+    android:id="@+id/main_nav.xml">
+    <fragment
+        android:id="@+id/home_bottom"
+        android:name="me.meenagopal24.wallpapers.UI.HomeFragment"
+        android:label="home">
+
+    </fragment>
+    <fragment
+        android:id="@+id/cat_bottom"
+        android:name="me.meenagopal24.wallpapers.UI.CategoryFragment"
+        android:label="category">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fav_bottom"
+        android:name="me.meenagopal24.wallpapers.UI.FavouriteFragment"
+        android:label="favourite">
+    </fragment>
+
+    <fragment
+        android:id="@+id/settings_bottom"
+        android:name="me.meenagopal24.wallpapers.UI.SettingsFragment"
+        android:label="favourite">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/selected_category_fragment"
+        android:name="me.meenagopal24.wallpapers.UI.SelectedCategoryFragment"
+        android:label="selected_category">
+
+        <argument
+            android:name="title"
+            app:argType="string" />
+
+        <argument
+            android:name="category"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

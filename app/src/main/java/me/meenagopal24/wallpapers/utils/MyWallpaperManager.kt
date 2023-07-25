@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -97,6 +98,7 @@ public class MyWallpaperManager(
             try {
                 close.onWallpaperApplied()
             } catch (ignored: Exception) {
+                Log.d("TAG", "setWallpaper: $ignored")
             }
         }.start()
 

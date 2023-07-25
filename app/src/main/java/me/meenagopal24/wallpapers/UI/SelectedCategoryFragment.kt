@@ -1,6 +1,8 @@
 package me.meenagopal24.wallpapers.UI
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,7 @@ import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
+import me.meenagopal24.wallpapers.temp.PreviewActivity
 import me.meenagopal24.wallpapers.utils.Constants
 import me.meenagopal24.wallpapers.utils.Constants.VIEW_TYPE_AD
 import retrofit2.Call
@@ -24,8 +27,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-private const val TITLE = "param1"
-private const val CATEGORY = "param2"
+private const val TITLE = "name"
+private const val CATEGORY = "category"
 
 
 class SelectedCategoryFragment() : ChangeInterface,
@@ -57,7 +60,8 @@ class SelectedCategoryFragment() : ChangeInterface,
         view.findViewById<TextView>(R.id.title_selected).text = name
         progress = view.findViewById(R.id.progress)
         wallpapersRecycler = view.findViewById(R.id.staggered_recycler)
-        wallpapersRecycler.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
+        wallpapersRecycler.layoutManager =
+            GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
 
         // TODO: change this code for span count adjustment
         val gridLayoutManager = GridLayoutManager(requireContext(), 2) // Use 2 for the span count
@@ -98,15 +102,34 @@ class SelectedCategoryFragment() : ChangeInterface,
             }
         })
     }
+
     override fun changeFragment(position: Int) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .addToBackStack(Constants.PREVIEW_FRAGMENT)
-            .add(R.id.main_layout, PreviewFragment.newInstance(list, openPosition = position))
-            .commit()
+        val intent = Intent(requireContext(), PreviewActivity::class.java)
+        intent.putParcelableArrayListExtra("pre_list", list)
+        intent.putExtra("position", position)
+        startActivity(intent)
+        requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     override fun changeFragment(title: String?, category: String?) {
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d("TAG", "onViewWorking saving data : ")
+        outState.putString("category", category)
+        outState.putString("name", name)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            Log.d("TAG", "onViewWorking onViewStateRestored: ")
+            category = savedInstanceState.getString("category")
+            name = savedInstanceState.getString("name")
+            Log.d("TAG", "onViewWorking onViewStateRestored: data is $category   $name ")
+        }
     }
 
     companion object {

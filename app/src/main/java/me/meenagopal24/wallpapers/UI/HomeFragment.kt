@@ -1,5 +1,6 @@
 package me.meenagopal24.wallpapers.UI
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import me.meenagopal24.wallpapers.databases.AllWallpaperListHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
 import me.meenagopal24.wallpapers.network.RetrofitClient
+import me.meenagopal24.wallpapers.temp.PreviewActivity
 import me.meenagopal24.wallpapers.utils.Constants.PREVIEW_FRAGMENT
 import me.meenagopal24.wallpapers.utils.Constants.VIEW_TYPE_AD
 import me.meenagopal24.wallpapers.utils.Functions
@@ -121,9 +123,11 @@ class HomeFragment : Fragment(),
     }
 
     override fun changeFragment(position: Int) {
-        requireActivity().supportFragmentManager.beginTransaction().addToBackStack(PREVIEW_FRAGMENT)
-            .add(R.id.main_layout, PreviewFragment.newInstance(list, openPosition = position))
-            .commit()
+        val intent = Intent(requireContext(), PreviewActivity::class.java)
+        intent.putParcelableArrayListExtra("pre_list", list)
+        intent.putExtra("position", position)
+        startActivity(intent)
+        requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     override fun changeFragment(title: String?, category: String?) {}

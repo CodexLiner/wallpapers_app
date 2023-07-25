@@ -39,8 +39,8 @@ class PreviewFragment() :
     private var position: Int = 0;
     lateinit var wallpapers: RecyclerView
     private lateinit var progressDialog: Dialog
-    lateinit var name :TextView
-    lateinit var imageView :ImageView
+    lateinit var name: TextView
+    lateinit var imageView: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +59,6 @@ class PreviewFragment() :
     ): View {
         Functions.windowTrans(requireActivity(), true)
         (requireActivity() as MainActivity).bottomModify(false)
-
         return inflater.inflate(R.layout.fragment_preview, container, false)
     }
 
@@ -78,16 +77,14 @@ class PreviewFragment() :
         initializeRecyclerView(preList, position)
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(wallpapers)
-
 //       Todo when scroll we need to perform some action
         wallpapers.addOnScrollListener(onScrollListener())
-
         view.findViewById<Button>(R.id.apply_wallpaper).setOnClickListener {
             showDlg()
         }
         view.findViewById<Button>(R.id.download_wallpaper).setOnClickListener {
             preList[position].let { it1 ->
-                val uri = it1.category+"/"+it1.image
+                val uri = it1.category + "/" + it1.image
                 MyWallpaperManager(
                     uri = uri,
                     context = requireContext(),
@@ -105,6 +102,7 @@ class PreviewFragment() :
     private fun changeText(position: Int, name: TextView) {
         name.text = preList[position].name
     }
+
     private fun addOrRemoveFav(imageView: ImageView) {
         if (!FavouriteWallpaperHelper(requireContext()).getIsContains(preList[position].uuid)) {
             FavouriteWallpaperHelper(requireContext()).addFav(
@@ -136,10 +134,12 @@ class PreviewFragment() :
 
         }
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Constants.recyclerState = wallpapers.layoutManager?.onSaveInstanceState()
     }
+
     private fun initializeRecyclerView(preList: ArrayList<wallpapers.item>, position: Int) {
         wallpapers.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -156,6 +156,7 @@ class PreviewFragment() :
             wallpapers.scrollToPosition(openPosition)
         }
     }
+
     private fun showDlg() {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -185,27 +186,33 @@ class PreviewFragment() :
         dialog.show()
 
     }
+
     private fun setFlag(f: Int) {
-        progressDialog = Dialog(requireContext())
-        progressDialog.setContentView(R.layout.loading)
-        progressDialog.setCancelable(false)
+        try {
+            progressDialog = Dialog(requireContext())
+            progressDialog.setContentView(R.layout.loading)
+            progressDialog.setCancelable(false)
 
-        val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
-        layoutParams.copyFrom(progressDialog.window?.attributes)
-        layoutParams.width = (context?.resources?.displayMetrics?.widthPixels ?: 0) - 100
+            val layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+            layoutParams.copyFrom(progressDialog.window?.attributes)
+            layoutParams.width = (context?.resources?.displayMetrics?.widthPixels ?: 0) - 100
 
-        progressDialog.window?.attributes = layoutParams
-        progressDialog.window?.setBackgroundDrawableResource(R.color.transparent)
-        progressDialog.show()
-        preList[position].let {
-            MyWallpaperManager(
-                context = requireContext(),
-                uri = it.category.trim() + "/" + it.image.trim(),
-                flag = f,
-                close = this@PreviewFragment,
-            ).getWallpaperReady()
-        }
+            progressDialog.window?.attributes = layoutParams
+            progressDialog.window?.setBackgroundDrawableResource(R.color.transparent)
+            if (::progressDialog.isInitialized){
+                progressDialog.show()
+            }
+            preList[position].let {
+                MyWallpaperManager(
+                    context = requireContext(),
+                    uri = it.category.trim() + "/" + it.image.trim(),
+                    flag = f,
+                    close = this@PreviewFragment,
+                ).getWallpaperReady()
+            }
+        }catch (_:java.lang.Exception){}
     }
+
     companion object {
         @JvmStatic
         fun newInstance(
@@ -221,6 +228,7 @@ class PreviewFragment() :
                 }
             }
     }
+
     override fun onWallpaperApplied() {
         progressDialog.dismiss()
         try {
@@ -230,13 +238,14 @@ class PreviewFragment() :
         } catch (_: Exception) {
         }
     }
+
     private fun wallpaperSuccessEvent() {
         view?.findViewById<LottieAnimationView>(R.id.lottie_layer_success)?.playAnimation()
         val mediaPlayer = MediaPlayer.create(context, R.raw.succes_sound)
         mediaPlayer.start()
     }
 
-    private fun onScrollListener() : RecyclerView.OnScrollListener {
+    private fun onScrollListener(): RecyclerView.OnScrollListener {
         val onScrollListener: RecyclerView.OnScrollListener =
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -252,5 +261,12 @@ class PreviewFragment() :
                 }
             }
         return onScrollListener
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::progressDialog.isInitialized){
+            progressDialog.dismiss()
+        }
     }
 }

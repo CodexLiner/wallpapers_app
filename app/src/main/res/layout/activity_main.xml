@@ -7,13 +7,14 @@
     android:orientation="vertical"
     android:background="@drawable/main_bg"
     tools:context=".MainActivity">
-
-    <FrameLayout
-        android:layout_weight="1"
-        android:id="@+id/main_layout"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navHostFragmentMainActivity"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_bar" />
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        android:layout_weight="1"
+        app:navGraph="@navigation/main_nav" />
 
     <FrameLayout
         android:layout_width="match_parent"

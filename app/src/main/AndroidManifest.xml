@@ -27,11 +27,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".temp.CategoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".temp.PreviewActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true" />
+        <activity
             android:name=".utils.Splash"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -40,26 +48,22 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true">
             <intent-filter android:autoVerify="true">
-
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="me.meenagopal24.me"
-                    android:pathPrefix="/sharing" />
+                    android:pathPrefix="/sharing"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
-
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
-        <!--        android:value="ca-app-pub-6831834965817563~7096628172"-->
+            android:resource="@array/preloaded_fonts" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <!-- android:value="ca-app-pub-6831834965817563~7096628172" -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6831834965817563~7096628172" />

@@ -2,10 +2,13 @@ package me.meenagopal24.wallpapers.utils;
 
 import android.os.Parcelable;
 
+import org.jetbrains.annotations.Nullable;
+
 import me.meenagopal24.wallpapers.UI.CategoryFragment;
 import me.meenagopal24.wallpapers.UI.FavouriteFragment;
 import me.meenagopal24.wallpapers.UI.HomeFragment;
 import me.meenagopal24.wallpapers.UI.PreviewFragment;
+import me.meenagopal24.wallpapers.UI.SelectedCategoryFragment;
 import me.meenagopal24.wallpapers.UI.SettingsFragment;
 import me.meenagopal24.wallpapers.UI.ConnectivityFragment;
 
@@ -21,6 +24,8 @@ public class Constants {
     public static final String CATEGORY_FRAGMENT = CategoryFragment.class.getName();
     public static final String SETTING_FRAGMENT = SettingsFragment.class.getName();
     public static final String FAVOURITE_FRAGMENT = FavouriteFragment.class.getName();
+    @Nullable
+    public static final String SELECTED_CATEGORY = SelectedCategoryFragment.class.getName();
     public static final String PREVIEW_FRAGMENT = PreviewFragment.class.getName();
     public static final String CONNECTIVITY_FRAGMENT = ConnectivityFragment.class.getName();
     public static Parcelable recyclerState = null;

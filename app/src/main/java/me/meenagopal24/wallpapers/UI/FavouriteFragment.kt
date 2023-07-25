@@ -1,5 +1,6 @@
 package me.meenagopal24.wallpapers.UI
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.temp.PreviewActivity
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -73,13 +75,11 @@ class FavouriteFragment : Fragment(), ChangeInterface {
     }
 
     override fun changeFragment(position: Int) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.main_layout,
-                PreviewFragment.newInstance(preList = list, position, false),
-                "old_preview_fav"
-            ).addToBackStack("old_preview_fav").commit()
+        val intent = Intent(requireContext(), PreviewActivity::class.java)
+        intent.putParcelableArrayListExtra("pre_list", list)
+        intent.putExtra("position", position)
+        startActivity(intent)
+        requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
-
     override fun changeFragment(title: String?, category: String?) {}
 }

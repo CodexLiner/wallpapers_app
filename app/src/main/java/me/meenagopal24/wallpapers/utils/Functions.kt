@@ -42,7 +42,6 @@ class Functions(private val m: FragmentManager) {
                 intent.launchUrl(context, Uri.parse(url))
             }
         }
-
         public fun windowTrans(activity: Activity, b: Boolean) {
             val window: Window = activity.window
             if (b) {
