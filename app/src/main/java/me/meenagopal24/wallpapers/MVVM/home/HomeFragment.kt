@@ -85,5 +85,4 @@ class HomeFragment : Fragment(), ChangeInterface, SwipeRefreshLayout.OnRefreshLi
         viewModel.onRefreshWallpapers()
     }
 
-
 }
