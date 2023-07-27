@@ -1,7 +1,6 @@
 package me.meenagopal24.wallpapers.UI
 
 import android.app.Dialog
-import android.app.Fragment
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.*
@@ -19,7 +18,7 @@ import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.PreviewAdapter
 import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
 import me.meenagopal24.wallpapers.interfaces.WallpaperResponse
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.utils.Constants
 import me.meenagopal24.wallpapers.utils.Functions
 import me.meenagopal24.wallpapers.utils.MyWallpaperManager
@@ -33,7 +32,7 @@ public const val HIDE_TEXT = "hide_text"
 
 class PreviewFragment() :
     androidx.fragment.app.Fragment(), WallpaperResponse {
-    lateinit var preList: ArrayList<wallpapers.item>
+    lateinit var preList: ArrayList<ApiResponseDezky.item>
     private var openPosition: Int = -1
     private var hideStatus: Boolean = false
     private var position: Int = 0;
@@ -106,7 +105,7 @@ class PreviewFragment() :
     private fun addOrRemoveFav(imageView: ImageView) {
         if (!FavouriteWallpaperHelper(requireContext()).getIsContains(preList[position].uuid)) {
             FavouriteWallpaperHelper(requireContext()).addFav(
-                me.meenagopal24.wallpapers.models.wallpapers
+                ApiResponseDezky
                     .item(
                         preList[position].name,
                         preList[position].image,
@@ -140,7 +139,7 @@ class PreviewFragment() :
         Constants.recyclerState = wallpapers.layoutManager?.onSaveInstanceState()
     }
 
-    private fun initializeRecyclerView(preList: ArrayList<wallpapers.item>, position: Int) {
+    private fun initializeRecyclerView(preList: ArrayList<ApiResponseDezky.item>, position: Int) {
         wallpapers.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         lateinit var adapter: PreviewAdapter
@@ -199,7 +198,7 @@ class PreviewFragment() :
 
             progressDialog.window?.attributes = layoutParams
             progressDialog.window?.setBackgroundDrawableResource(R.color.transparent)
-            if (::progressDialog.isInitialized){
+            if (::progressDialog.isInitialized) {
                 progressDialog.show()
             }
             preList[position].let {
@@ -210,13 +209,14 @@ class PreviewFragment() :
                     close = this@PreviewFragment,
                 ).getWallpaperReady()
             }
-        }catch (_:java.lang.Exception){}
+        } catch (_: java.lang.Exception) {
+        }
     }
 
     companion object {
         @JvmStatic
         fun newInstance(
-            preList: ArrayList<wallpapers.item>?,
+            preList: ArrayList<ApiResponseDezky.item>?,
             openPosition: Int = -1,
             remove: Boolean = false,
         ) =
@@ -265,7 +265,7 @@ class PreviewFragment() :
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::progressDialog.isInitialized){
+        if (::progressDialog.isInitialized) {
             progressDialog.dismiss()
         }
     }

@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jsibbold.zoomage.ZoomageView
 import me.meenagopal24.wallpapers.R
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.utils.Constants
 
-class PreviewAdapter(private val list: MutableList<wallpapers.item>?) :
+class PreviewAdapter(private val list: MutableList<ApiResponseDezky.item>?) :
     RecyclerView.Adapter<PreviewAdapter.holder>() {
     class holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val wallpaper: ZoomageView = itemView.findViewById(R.id.wallpaper_container)

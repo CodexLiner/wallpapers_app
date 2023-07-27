@@ -1,6 +1,7 @@
 package me.meenagopal24.wallpapers.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.ContentValues
@@ -16,6 +17,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,9 +38,12 @@ public class MyWallpaperManager(
     val context: Context,
     val flag: Int,
     val close: WallpaperResponse,
-) {
+
+    ) {
+    private val PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1
     private val wallpaperManager: WallpaperManager = WallpaperManager.getInstance(context)
-    val name: FrameLayout = (context as Activity).findViewById<FrameLayout>(R.id.main_layout)
+//    val name: FrameLayout = (context as Activity).findViewById<FrameLayout>(R.id.main_layout)
+
     fun getWallpaperReady() {
         try {
             val icon = BitmapFactory.decodeResource(context.resources, R.drawable.androidw)
@@ -58,7 +63,9 @@ public class MyWallpaperManager(
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {
-                        Snackbar.make(name, "Failed to Apply Wallpaper", Snackbar.LENGTH_SHORT)
+//                        Snackbar.make(name, "Failed to Apply Wallpaper", Snackbar.LENGTH_SHORT)
+//                            .show()
+                        Toast.makeText(context, "Failed to Apply Wallpaper", Toast.LENGTH_SHORT)
                             .show()
                     }
                 })
@@ -69,6 +76,7 @@ public class MyWallpaperManager(
         }
     }
 
+    @SuppressLint("LogNotTimber")
     private fun setWallpaper(bitmap: Bitmap) {
         Thread {
             when (flag) {
@@ -93,7 +101,8 @@ public class MyWallpaperManager(
                 }
             }
             (context as Activity).runOnUiThread {
-                Snackbar.make(name, "Wallpaper Applied successfully", Snackbar.LENGTH_SHORT).show()
+//                Snackbar.make(name, "Wallpaper Applied successfully", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(context, "Wallpaper Applied successfully", Toast.LENGTH_SHORT).show()
             }
             try {
                 close.onWallpaperApplied()
@@ -118,7 +127,8 @@ public class MyWallpaperManager(
             )
             return
         }
-        Snackbar.make(name, "Downloading...", Snackbar.LENGTH_SHORT).show()
+//        Snackbar.make(name, "Downloading...", Snackbar.LENGTH_SHORT).show()
+        Toast.makeText(context, "Downloading...", Toast.LENGTH_SHORT).show()
         Glide.with(context).asBitmap().load(BASE_URL_IMAGE + uri)
             .into(object : CustomTarget<Bitmap?>() {
                 override fun onResourceReady(
@@ -129,7 +139,10 @@ public class MyWallpaperManager(
                         val values = ContentValues().apply {
                             put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
                             put(MediaStore.MediaColumns.MIME_TYPE, ".jpg")
-                            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                            put(
+                                MediaStore.MediaColumns.RELATIVE_PATH,
+                                Environment.DIRECTORY_PICTURES
+                            )
                         }
 
                         val resolver = context.contentResolver
@@ -170,62 +183,14 @@ public class MyWallpaperManager(
                             }
                         }
                     }
+                    Toast.makeText(context, "Wallpaper saved", Toast.LENGTH_SHORT).show()
+
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
                     // Handle the placeholder if needed
                 }
             })
-        Snackbar.make(name, "Downloading Complete", Snackbar.LENGTH_SHORT).show()
 
     }
-
-
-    private val PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1
-
-//    fun saveBitmapToStorage(fileName: String) {
-//
-//        if (Build.VERSION.SDK_INT <= 29 && ContextCompat.checkSelfPermission(
-//                context, Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                context as Activity,
-//                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-//                PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE
-//            )
-//            return
-//        }
-//        Snackbar.make(name, "Downloading...", Snackbar.LENGTH_SHORT).show()
-//        Glide.with(context).asBitmap().load(uri).into(object : CustomTarget<Bitmap?>() {
-//            override fun onResourceReady(
-//                resource: Bitmap,
-//                transition: Transition<in Bitmap?>?,
-//            ) {
-//                val picturesDir =
-//                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-//                if (picturesDir != null) {
-//                    val imageFile = File(picturesDir, fileName)
-//                    try {
-//                        FileOutputStream(imageFile).use { fos ->
-//                            resource.compress(Bitmap.CompressFormat.JPEG, 10, fos)
-//                            Snackbar.make(name, "Downloading Complete", Snackbar.LENGTH_SHORT)
-//                                .show()
-//                        }
-//                        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-//                        mediaScanIntent.data = Uri.fromFile(imageFile)
-//                        context.sendBroadcast(mediaScanIntent)
-//                    } catch (e: IOException) {
-//                        e.printStackTrace()
-//                    }
-//                }
-//            }
-//
-//            override fun onLoadCleared(placeholder: Drawable?) {
-//                // Handle the placeholder if needed
-//            }
-//        })
-//
-//
-//    }
 }

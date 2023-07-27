@@ -4,12 +4,12 @@ import android.os.Parcelable;
 
 import org.jetbrains.annotations.Nullable;
 
-import me.meenagopal24.wallpapers.UI.CategoryFragment;
-import me.meenagopal24.wallpapers.UI.FavouriteFragment;
-import me.meenagopal24.wallpapers.UI.HomeFragment;
+import me.meenagopal24.wallpapers.MVVM.Category.CategoryFragment;
+import me.meenagopal24.wallpapers.MVVM.favourite.FavouriteFragment;
+import me.meenagopal24.wallpapers.MVVM.home.HomeFragment;
 import me.meenagopal24.wallpapers.UI.PreviewFragment;
 import me.meenagopal24.wallpapers.UI.SelectedCategoryFragment;
-import me.meenagopal24.wallpapers.UI.SettingsFragment;
+import me.meenagopal24.wallpapers.MVVM.setting.SettingsFragment;
 import me.meenagopal24.wallpapers.UI.ConnectivityFragment;
 
 public class Constants {

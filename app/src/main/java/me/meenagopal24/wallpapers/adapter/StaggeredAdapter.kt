@@ -1,4 +1,5 @@
 package me.meenagopal24.wallpapers.adapter
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.TypedValue
@@ -19,12 +20,13 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.utils.Constants.*
+import javax.inject.Inject
 
 
-class StaggeredAdapter(
-    private val list: MutableList<wallpapers.item>,
+class StaggeredAdapter @Inject constructor(
+    private val list: MutableList<ApiResponseDezky.item>,
     private val change: ChangeInterface,
 ) :
 
@@ -138,6 +140,12 @@ class StaggeredAdapter(
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics
         ).toInt()
+    }
+
+    fun setData(newList: List<ApiResponseDezky.item>) {
+        list.clear()
+        list.addAll(newList)
+        notifyDataSetChanged()
     }
 
 

@@ -2,7 +2,6 @@ package me.meenagopal24.wallpapers.temp
 
 import android.app.Dialog
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -21,14 +21,13 @@ import me.meenagopal24.wallpapers.adapter.PreviewAdapter
 import me.meenagopal24.wallpapers.databases.FavouriteWallpaperHelper
 import me.meenagopal24.wallpapers.databases.WallpaperListHelper
 import me.meenagopal24.wallpapers.interfaces.WallpaperResponse
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.utils.Constants
 import me.meenagopal24.wallpapers.utils.Functions
 import me.meenagopal24.wallpapers.utils.MyWallpaperManager
-import kotlin.math.log
 
 class PreviewActivity : AppCompatActivity(), WallpaperResponse {
-    lateinit var preList: ArrayList<wallpapers.item>
+    lateinit var preList: ArrayList<ApiResponseDezky.item>
     private var openPosition: Int = -1
     private var hideStatus: Boolean = false
     private var position: Int = 0;
@@ -85,7 +84,7 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
     private fun addOrRemoveFav(imageView: ImageView) {
         if (!FavouriteWallpaperHelper(applicationContext).getIsContains(preList[position].uuid)) {
             FavouriteWallpaperHelper(applicationContext).addFav(
-                me.meenagopal24.wallpapers.models.wallpapers
+                ApiResponseDezky
                     .item(
                         preList[position].name,
                         preList[position].image,
@@ -94,24 +93,19 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
                         preList[position].category
                     )
             )
-            imageView.let {
-                Snackbar.make(
-                    applicationContext,
-                    it, "Added to favourites", Snackbar.LENGTH_SHORT
-                ).show()
-            }
+            showSnackbar("Added to favourites")
             imageView.setImageResource(R.drawable.fi_fill_heart)
         } else {
             FavouriteWallpaperHelper(applicationContext).removeFav(preList[position].uuid)
-            imageView?.let {
-                Snackbar.make(
-                    applicationContext,
-                    it, "Removed from favourite", Snackbar.LENGTH_SHORT
-                ).show()
-            }
+            showSnackbar("Removed from favourite")
             imageView.setImageResource(R.drawable.fi_ss_heart)
 
         }
+    }
+
+    private fun showSnackbar(message: String) {
+        val rootView = findViewById<View>(android.R.id.content)
+        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -119,7 +113,7 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
         Constants.recyclerState = wallpapers.layoutManager?.onSaveInstanceState()
     }
 
-    private fun initializeRecyclerView(preList: ArrayList<wallpapers.item>, position: Int) {
+    private fun initializeRecyclerView(preList: ArrayList<ApiResponseDezky.item>, position: Int) {
         wallpapers.layoutManager =
             LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
         lateinit var adapter: PreviewAdapter
@@ -180,8 +174,8 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
             progressDialog.window?.attributes = layoutParams
             progressDialog.window?.setBackgroundDrawableResource(R.color.transparent)
             progressDialog.show()
-        }catch (e:Exception){
-            Log.d("TAG", "workingmenUCrash: on setFlag function ")
+        } catch (e: Exception) {
+
         }
         preList[position].let {
             GlobalScope.launch {
@@ -193,7 +187,6 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
                         close = this@PreviewActivity,
                     ).getWallpaperReady()
                 }
-                Log.d("TAG", "workingmenUCrash: got result")
             }
 
         }
@@ -208,6 +201,7 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
         } catch (_: Exception) {
         }
     }
+
 
     private fun wallpaperSuccessEvent() {
         findViewById<LottieAnimationView>(R.id.lottie_layer_success)?.playAnimation()
@@ -244,7 +238,7 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
     }
 
     private fun dismissDialog() {
-        if (::progressDialog.isInitialized){
+        if (::progressDialog.isInitialized) {
             progressDialog.dismiss()
         }
     }

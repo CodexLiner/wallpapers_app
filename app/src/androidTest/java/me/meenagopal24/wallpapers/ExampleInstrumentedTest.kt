@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("me.meenagopal24.wallpapers", appContext.packageName)
+        assertEquals("me.meenagopal24.ApiResponseDezky", appContext.packageName)
     }
 }

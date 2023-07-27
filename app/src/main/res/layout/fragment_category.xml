@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/limeWhite"
     android:id="@+id/main_layout"
-    tools:context=".UI.CategoryFragment">
+    tools:context=".MVVM.Category.CategoryFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
-        android:layout_marginBottom="@dimen/_10_Dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp" />
 

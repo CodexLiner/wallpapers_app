@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.adapter.StaggeredAdapter
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.network.RetrofitClient
 import me.meenagopal24.wallpapers.utils.Constants
 import retrofit2.Call
@@ -24,7 +24,7 @@ import retrofit2.Response
 class CategoryActivity : AppCompatActivity(), ChangeInterface {
     private var name: String? = null
     private var category: String? = null
-    lateinit var list: ArrayList<wallpapers.item>
+    lateinit var list: ArrayList<ApiResponseDezky.item>
     lateinit var wallpapersRecycler: RecyclerView
     lateinit var progress: ProgressBar
 
@@ -54,13 +54,13 @@ class CategoryActivity : AppCompatActivity(), ChangeInterface {
 
     private fun getItemsFromCategory() {
         val whenFavourite: LinearLayout? = findViewById(R.id.when_favourite)
-        val call: Call<wallpapers> =
+        val call: Call<ApiResponseDezky> =
             RetrofitClient.getInstance().api.getWallpaperByCategory(category)
-        call.enqueue(object : Callback<wallpapers> {
-            override fun onResponse(call: Call<wallpapers>, response: Response<wallpapers>) {
+        call.enqueue(object : Callback<ApiResponseDezky> {
+            override fun onResponse(call: Call<ApiResponseDezky>, response: Response<ApiResponseDezky>) {
                 progress.visibility = View.GONE
                 if (response.body()?.list != null && response.body()?.list?.size != 0) {
-                    list = response.body()?.list as ArrayList<wallpapers.item>
+                    list = response.body()?.list as ArrayList<ApiResponseDezky.item>
                     wallpapersRecycler.adapter =
                         response.body()?.list?.let {
                             StaggeredAdapter(
@@ -74,7 +74,7 @@ class CategoryActivity : AppCompatActivity(), ChangeInterface {
                 }
             }
 
-            override fun onFailure(call: Call<wallpapers>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponseDezky>, t: Throwable) {
                 whenFavourite?.visibility = View.VISIBLE
                 Toast.makeText(this@CategoryActivity, "something went wrong", Toast.LENGTH_SHORT)
                     .show()

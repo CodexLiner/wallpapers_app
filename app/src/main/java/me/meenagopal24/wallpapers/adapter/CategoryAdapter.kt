@@ -1,6 +1,5 @@
 package me.meenagopal24.wallpapers.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.utils.Constants.BASE_URL_CATEGORY
 
 class CategoryAdapter(
-    private val list: MutableList<wallpapers.item>?,
+    private val list: MutableList<ApiResponseDezky.item>?,
     private val change: ChangeInterface,
 ) :
     RecyclerView.Adapter<CategoryAdapter.Holder>() {

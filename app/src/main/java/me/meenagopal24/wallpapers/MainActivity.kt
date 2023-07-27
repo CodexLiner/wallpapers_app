@@ -15,28 +15,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import me.meenagopal24.wallpapers.UI.HomeFragment
 import me.meenagopal24.wallpapers.services.InternetConnectivityReceiver
 import me.meenagopal24.wallpapers.utils.Constants.*
 import me.meenagopal24.wallpapers.utils.Functions
 import java.util.*
-import android.net.Uri
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import dagger.hilt.android.AndroidEntryPoint
 import me.meenagopal24.wallpapers.databinding.ActivityMainBinding
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var navController: NavController
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         appUpdateManager = AppUpdateManagerFactory.create(applicationContext);
         checkForUpdates()
 
-//      @connectivity checker
+        //@connectivity checker
         val connectivityReceiver = InternetConnectivityReceiver(supportFragmentManager, this)
         registerReceiver(
             connectivityReceiver,
@@ -92,8 +89,7 @@ class MainActivity : AppCompatActivity() {
                         this@MainActivity,
                         MY_REQUEST_CODE
                     )
-                } catch (e: Exception) {
-                    Log.d("TAG", "onActivityResult E: $e ")
+                } catch (_: Exception) {
                 }
             }
         }
@@ -102,10 +98,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MY_REQUEST_CODE) {
-            if (resultCode != RESULT_OK) {
-            }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -134,9 +126,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_POST_NOTIFICATIONS) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this@MainActivity, "Permission granted", Toast.LENGTH_SHORT).show()
-            } else {
+            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this@MainActivity, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }

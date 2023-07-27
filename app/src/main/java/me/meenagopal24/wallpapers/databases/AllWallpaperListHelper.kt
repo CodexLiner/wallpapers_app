@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import me.meenagopal24.wallpapers.models.wallpapers
+import me.meenagopal24.wallpapers.models.ApiResponseDezky
 
 class AllWallpaperListHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -29,7 +29,7 @@ class AllWallpaperListHelper(context: Context) :
         // Handle database upgrades if needed
     }
 
-    fun saveList(myList: ArrayList<wallpapers.item>) {
+    fun saveList(myList: ArrayList<ApiResponseDezky.item>) {
         val db = writableDatabase
         db.delete(TABLE_NAME, null, null)
 
@@ -46,9 +46,9 @@ class AllWallpaperListHelper(context: Context) :
     }
 
 
-    fun getList(): ArrayList<wallpapers.item> {
+    fun getList(): ArrayList<ApiResponseDezky.item> {
         val db = readableDatabase
-        val list = ArrayList<wallpapers.item>()
+        val list = ArrayList<ApiResponseDezky.item>()
 
         val query = "SELECT * FROM $TABLE_NAME"
         val cursor = db.rawQuery(query, null)
@@ -60,7 +60,7 @@ class AllWallpaperListHelper(context: Context) :
                 val thumbnai = cursor.getString(cursor.getColumnIndex(THUMBNAIL))
                 val uuid = cursor.getString(cursor.getColumnIndex(UUID))
                 val category = cursor.getString(cursor.getColumnIndex(CATEGORY))
-                list.add(wallpapers.item(name, url, uuid , thumbnai , category))
+                list.add(ApiResponseDezky.item(name, url, uuid , thumbnai , category))
             } while (cursor.moveToNext())
         }
 

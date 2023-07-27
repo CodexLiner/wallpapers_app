@@ -5,26 +5,26 @@
     android:id="@+id/main_nav.xml">
     <fragment
         android:id="@+id/home_bottom"
-        android:name="me.meenagopal24.wallpapers.UI.HomeFragment"
+        android:name="me.meenagopal24.wallpapers.MVVM.home.HomeFragment"
         android:label="home">
 
     </fragment>
     <fragment
         android:id="@+id/cat_bottom"
-        android:name="me.meenagopal24.wallpapers.UI.CategoryFragment"
+        android:name="me.meenagopal24.wallpapers.MVVM.Category.CategoryFragment"
         android:label="category">
 
     </fragment>
 
     <fragment
         android:id="@+id/fav_bottom"
-        android:name="me.meenagopal24.wallpapers.UI.FavouriteFragment"
+        android:name="me.meenagopal24.wallpapers.MVVM.favourite.FavouriteFragment"
         android:label="favourite">
     </fragment>
 
     <fragment
         android:id="@+id/settings_bottom"
-        android:name="me.meenagopal24.wallpapers.UI.SettingsFragment"
+        android:name="me.meenagopal24.wallpapers.MVVM.setting.SettingsFragment"
         android:label="favourite">
 
     </fragment>

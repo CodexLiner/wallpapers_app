@@ -1,41 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/main_bg"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navHostFragmentMainActivity"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
         android:layout_weight="1"
+        app:defaultNavHost="true"
         app:navGraph="@navigation/main_nav" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_bar"
+        style="@style/BottomNavTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:animateLayoutChanges="false"
+        android:background="@drawable/bottom_navigation_background"
+        android:elevation="8dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="visible"
+        app:itemBackground="@android:color/transparent"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@drawable/bottom_navigation_color_selector"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_menu" />
+
     <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/frame_demo"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:id="@+id/frame_demo">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav_bar"
+            android:id="@+id/bottom_nav_bar_t"
             android:layout_width="match_parent"
-            android:animateLayoutChanges="false"
-            android:textAlignment="viewStart"
-            app:itemIconSize="20dp"
-            app:labelVisibilityMode="unlabeled"
-            app:itemRippleColor="@color/white"
-            app:itemBackground="@android:color/transparent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="false"
             android:foreground="?attr/selectableItemBackground"
+            android:textAlignment="viewStart"
+            app:itemBackground="@android:color/transparent"
+            app:itemIconSize="20dp"
+            app:itemRippleColor="@color/white"
+            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_menu"/>
+            app:menu="@menu/bottom_menu" />
     </FrameLayout>
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

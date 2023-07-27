@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Wallpaper" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
         <!-- Primary brand color. -->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="colorPrimary">@color/colorMain</item>
@@ -33,5 +34,10 @@
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/limeWhite</item>
+    </style>
+
+    <style name="BottomNavTheme" parent="Widget.Design.BottomNavigationView">
+        <!-- Set the background color to transparent -->
+        <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>
