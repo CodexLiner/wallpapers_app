@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private var isHome = false
     lateinit var appUpdateManager: AppUpdateManager
     private val MY_REQUEST_CODE = 17326
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_POST_NOTIFICATIONS) {
-            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_DENIED) {
+            if (grantResults.isEmpty() || grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this@MainActivity, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }

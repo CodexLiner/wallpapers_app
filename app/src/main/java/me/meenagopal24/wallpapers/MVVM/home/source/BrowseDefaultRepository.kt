@@ -1,6 +1,5 @@
 package me.meenagopal24.wallpapers.MVVM.home.source
 
-import android.widget.Toast
 import me.meenagopal24.wallpapers.databases.DatabaseGetter
 import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import timber.log.Timber
@@ -11,7 +10,7 @@ class BrowseDefaultRepository @Inject constructor(
     private val databaseGetter: DatabaseGetter,
 ) : BrowseDataSource {
     override suspend fun getRecentWallpapers(): ApiResponseDezky {
-        databaseGetter.getWallpapers().saveList(remoteRepo.getWallpapers().list)
+        databaseGetter.getWallpapers().saveList(remoteRepo.getWallpapers(   ).list)
         return ApiResponseDezky(databaseGetter.getWallpapers().getList())
     }
 

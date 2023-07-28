@@ -1,8 +1,6 @@
 package me.meenagopal24.wallpapers.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +20,7 @@ import me.meenagopal24.wallpapers.R
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
 import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.utils.Constants.*
+import me.meenagopal24.wallpapers.utils.Functions.Companion.changeParams
 import javax.inject.Inject
 
 
@@ -42,7 +41,7 @@ class StaggeredAdapter @Inject constructor(
     }
 
     class AdViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val add_layout: CardView = itemView.findViewById(R.id.main_ad_layout)
+        val addLayout: CardView = itemView.findViewById(R.id.main_ad_layout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -62,7 +61,7 @@ class StaggeredAdapter @Inject constructor(
 
     override fun getItemViewType(position: Int): Int {
         if (position == 0) return VIEW_TYPE_CONTENT
-        return if (position == 4 || position % AD_POSITION_INTERVAL == 0) {
+        return if (list[position].name == "AD") {
             VIEW_TYPE_AD
         } else {
             VIEW_TYPE_CONTENT
@@ -74,26 +73,30 @@ class StaggeredAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
-        if (getItemViewType(position) == VIEW_TYPE_CONTENT) {
-            val contentHolder = holder as Holder
-            val item = list[position]
-            Glide.with(contentHolder.itemView.context)
-                .load(BASE_URL_IMAGE + item.category.trim() + "/" + item.image.trim())
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .placeholder(R.drawable.grey)
-                .into(contentHolder.sImage)
+        when (getItemViewType(position)) {
+            VIEW_TYPE_CONTENT -> {
+                val contentHolder = holder as Holder
+                val item = list[position]
+                Glide.with(contentHolder.itemView.context)
+                    .load(BASE_URL_IMAGE + item.category.trim() + "/" + item.image.trim())
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .placeholder(R.drawable.grey)
+                    .into(contentHolder.sImage)
 
-            contentHolder.sImage.setOnClickListener {
-                change.changeFragment(position)
+                contentHolder.sImage.setOnClickListener {
+                    change.changeFragment(position)
+                }
             }
-        } else {
-            val adHolder = holder as AdViewHolder
-            if (loadedAds.containsKey(position)) {
-                val ad = loadedAds[position]
-                bindNativeAd(ad, holder.itemView)
-            } else {
-                loadNativeAd(adHolder.add_layout, holder.itemView, position)
+            VIEW_TYPE_AD -> {
+                val adHolder = holder as AdViewHolder
+                if (loadedAds.containsKey(position)) {
+                    val ad = loadedAds[position]
+                    bindNativeAd(ad, holder.itemView)
+                } else {
+                    loadNativeAd(adHolder.addLayout, holder.itemView, position)
+                }
             }
+            else -> {}
         }
 
     private fun loadNativeAd(
@@ -114,7 +117,6 @@ class StaggeredAdapter @Inject constructor(
                 .withAdListener(object : AdListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        // Handle ad loading failure if needed
                         changeParams(adLayout, h = 0, m = 0)
                         notifyDataSetChanged()
                     }
@@ -124,23 +126,6 @@ class StaggeredAdapter @Inject constructor(
         adLoader.loadAd(AdRequest.Builder().build())
     }
 
-    private fun changeParams(adHolder: CardView, h: Int, m: Int) {
-        adHolder.setPadding(0, 0, 0, 0)
-        val layoutParams = adHolder.layoutParams as ViewGroup.MarginLayoutParams
-
-        layoutParams.setMargins(m, m, m, m)
-        adHolder.layoutParams = layoutParams
-
-        val heightInPixels = dpToPx(adHolder.context, h)
-        adHolder.layoutParams.height = heightInPixels
-        adHolder.requestLayout()
-    }
-
-    private fun dpToPx(context: Context, dp: Int): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics
-        ).toInt()
-    }
 
     fun setData(newList: List<ApiResponseDezky.item>) {
         list.clear()

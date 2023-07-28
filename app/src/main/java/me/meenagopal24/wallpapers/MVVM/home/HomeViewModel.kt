@@ -9,8 +9,7 @@ import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import timber.log.Timber
 import javax.inject.Inject
 
-//private val repo: BrowseDataSource,
-//private val coroutineDispatcher: CoroutineDispatcher,
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repo: BrowseDefaultRepository) : ViewModel() {
     val recentlyAddedWallpapers: MutableLiveData<ArrayList<ApiResponseDezky.item>> =
@@ -31,7 +30,6 @@ class HomeViewModel @Inject constructor(private val repo: BrowseDefaultRepositor
     }
 
     fun onRefreshWallpapers() {
-        Timber.d("calling get wallapeprs")
         getWallpapers()
     }
 }

@@ -20,6 +20,7 @@ import me.meenagopal24.wallpapers.models.ApiResponseDezky
 import me.meenagopal24.wallpapers.temp.PreviewActivity
 import me.meenagopal24.wallpapers.utils.Constants.VIEW_TYPE_AD
 import me.meenagopal24.wallpapers.utils.Functions
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), ChangeInterface, SwipeRefreshLayout.OnRefreshListener {
@@ -27,7 +28,6 @@ class HomeFragment : Fragment(), ChangeInterface, SwipeRefreshLayout.OnRefreshLi
     lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
     lateinit var list: ArrayList<ApiResponseDezky.item>
-    private var scrollPosition = 0
     lateinit var adapter: StaggeredAdapter
 
     override fun onCreateView(
@@ -44,19 +44,18 @@ class HomeFragment : Fragment(), ChangeInterface, SwipeRefreshLayout.OnRefreshLi
         binding.staggeredRecycler.layoutManager =
             GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
         binding.swipeRefresh.setOnRefreshListener(this)
-        binding.progress.visibility = View.INVISIBLE
+        setAdapter()
         getRecentWallpapers()
     }
 
     private fun getRecentWallpapers() {
         viewModel.recentlyAddedWallpapers.observe(this@HomeFragment) {
-            AllWallpaperListHelper(requireContext()).saveList(it)
             this.list = it
             binding.staggeredRecycler.apply {
                 adapter = StaggeredAdapter(it, this@HomeFragment)
-                scrollToPosition(scrollPosition)
             }
-            setAdapter()
+            binding.shimmerViewContainer.visibility = View.GONE
+            binding.staggeredRecycler.visibility = View.VISIBLE
             binding.swipeRefresh.isRefreshing = false
         }
     }
@@ -69,6 +68,7 @@ class HomeFragment : Fragment(), ChangeInterface, SwipeRefreshLayout.OnRefreshLi
             }
         }
         binding.staggeredRecycler.layoutManager = gridLayoutManager
+        binding.progress.visibility = View.INVISIBLE
     }
 
     override fun changeFragment(position: Int) {
@@ -83,6 +83,16 @@ class HomeFragment : Fragment(), ChangeInterface, SwipeRefreshLayout.OnRefreshLi
 
     override fun onRefresh() {
         viewModel.onRefreshWallpapers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerViewContainer.startShimmer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.shimmerViewContainer.stopShimmer()
     }
 
 }

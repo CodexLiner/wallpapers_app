@@ -68,6 +68,7 @@
         android:paddingBottom="8dp">
 
         <Button
+            android:background="@drawable/_mat_button"
             android:id="@+id/download_wallpaper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,9 +76,12 @@
             android:layout_weight="1"
             android:fontFamily="@font/open_sans"
             android:padding="15dp"
+            app:icon="@drawable/download_button"
+            app:iconGravity="textStart"
             android:text="@string/download" />
 
         <Button
+            android:background="@drawable/_mat_button"
             android:id="@+id/apply_wallpaper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,6 +89,8 @@
             android:layout_weight="1"
             android:fontFamily="@font/open_sans"
             android:padding="15dp"
+            app:icon="@drawable/check_"
+            app:iconGravity="textStart"
             android:text="@string/apply" />
     </LinearLayout>
 

@@ -6,10 +6,13 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import me.meenagopal24.wallpapers.R
@@ -86,6 +89,25 @@ class Functions(private val m: FragmentManager) {
             val density = context.resources.displayMetrics.density
             return (dpValue * density + 0.5f).toInt()
         }
+
+        public fun changeParams(adHolder: CardView, h: Int, m: Int) {
+            adHolder.setPadding(0, 0, 0, 0)
+            val layoutParams = adHolder.layoutParams as ViewGroup.MarginLayoutParams
+
+            layoutParams.setMargins(m, m, m, m)
+            adHolder.layoutParams = layoutParams
+
+            val heightInPixels = dpToPx(adHolder.context, h)
+            adHolder.layoutParams.height = heightInPixels
+            adHolder.requestLayout()
+        }
+
+        private fun dpToPx(context: Context, dp: Int): Int {
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics
+            ).toInt()
+        }
+
 
 
     }

@@ -28,7 +28,7 @@ class Splash : AppCompatActivity() {
             startActivity(intent)
             overridePendingTransition(0, 0)
             finish()
-        }, 300)
+        }, 1500)
     }
 
     private fun getWallpapers() {

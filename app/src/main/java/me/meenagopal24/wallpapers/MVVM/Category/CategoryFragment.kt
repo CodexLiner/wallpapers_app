@@ -15,6 +15,7 @@ import me.meenagopal24.wallpapers.adapter.CategoryAdapter
 import me.meenagopal24.wallpapers.databases.CategoryListHelper
 import me.meenagopal24.wallpapers.databinding.FragmentCategoryBinding
 import me.meenagopal24.wallpapers.interfaces.ChangeInterface
+import timber.log.Timber
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment(), ChangeInterface {
@@ -31,8 +32,8 @@ class CategoryFragment : Fragment(), ChangeInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.categoryRecycler.layoutManager = GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
-
+        binding.categoryRecycler.layoutManager =
+            GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
         getCategories()
     }
 
@@ -41,6 +42,8 @@ class CategoryFragment : Fragment(), ChangeInterface {
             binding.categoryRecycler.adapter = CategoryAdapter(
                 it, this@CategoryFragment
             )
+            binding.categoryRecycler.visibility = View.VISIBLE
+            binding.shimmerViewContainer.visibility = View.INVISIBLE
         }
     }
 
@@ -50,6 +53,16 @@ class CategoryFragment : Fragment(), ChangeInterface {
         args.putString("name", title)
         args.putString("category", category)
         findNavController().navigate(R.id.selected_category_fragment, args)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerViewContainer.startShimmer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.shimmerViewContainer.stopShimmer()
     }
 
 }
