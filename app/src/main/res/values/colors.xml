@@ -10,8 +10,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="limeWhite">#F4F7FF</color>
     <color name="transparent">#00ffffff</color>
-    <color name="color_main_light">#C4E1CF</color>
-    <color name="colorMain">#88c63e</color>
+    <color name="color_main_light">#577C93</color>
+    <color name="color_main_light_2">#B5C8D5</color>
+    <color name="colorMain">#265c7e</color>
+<!--    <color name="colorMain">#3d9591</color>-->
+<!--    <color name="colorMain">#88c63e</color>-->
+
 
     <color name="background">#dddddd</color>
 </resources>

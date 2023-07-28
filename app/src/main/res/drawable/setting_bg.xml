@@ -7,5 +7,5 @@
         android:right="10dp"
         android:top="10dp"/>
     <stroke android:width="0.1dp" android:color="#DAE3DADA"/>
-    <solid android:color="@color/color_main_light"/>
+    <solid android:color="@color/color_main_light_2"/>
 </shape>

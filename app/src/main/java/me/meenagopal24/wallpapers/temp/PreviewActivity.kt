@@ -62,7 +62,7 @@ class PreviewActivity : AppCompatActivity(), WallpaperResponse {
         }
         findViewById<Button>(R.id.download_wallpaper).setOnClickListener {
             preList[position].let { it1 ->
-                val uri = it1.category + "/" + it1.image
+                val uri = it1.category.trim() + "/" + it1.image.trim()
                 MyWallpaperManager(
                     uri = uri,
                     context = applicationContext,

@@ -30,6 +30,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/home"
+            android:padding="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -37,13 +38,14 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/home_button_bg"
             android:fontFamily="@font/poppins"
-            android:text="Home Screen"
+            android:text="Set as Home Screen"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/lock"
+            android:padding="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -51,12 +53,13 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/lock_button_bg"
             android:fontFamily="@font/poppins"
-            android:text="Lock Screen"
+            android:text="Set as Lock Screen"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="normal" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:padding="15dp"
             android:id="@+id/both"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +71,7 @@
             android:text="Home &amp; Lock Screens"
             android:textAllCaps="false"
             android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="normal" />
 
     </LinearLayout>
